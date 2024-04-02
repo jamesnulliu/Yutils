@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+namespace yutils
+{
 class TimeCounter
 {
 public:
@@ -68,3 +70,4 @@ private:
     std::chrono::high_resolution_clock::time_point start;
     std::vector<std::chrono::high_resolution_clock::duration> resultList;
 };
+}  // namespace yutils
