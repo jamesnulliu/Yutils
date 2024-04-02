@@ -11,7 +11,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 # Set target include directories:
 # - Yutils/include
-target_include_directories(${PROJECT_NAME} PRIVATE ../include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 # Link to Yutils library automatically
 # @see Yutils/src/CMakeLists.txt:add_library(${LIBRARY_NAME} ...)
@@ -27,5 +27,5 @@ endif()
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY 
-    ../bin/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}
 )

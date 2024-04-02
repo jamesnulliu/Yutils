@@ -24,14 +24,14 @@ else()
 endif()
 
 # Specify include directories for this target
-target_include_directories(${LIBRARY_NAME} PRIVATE ../include)
+target_include_directories(${LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 # Set the version of the library and output directories
 set_target_properties(
     ${LIBRARY_NAME} PROPERTIES
     VERSION ${LIBRARY_VERSION}
     OUTPUT_NAME ${LIBRARY_NAME}
-    LIBRARY_OUTPUT_DIRECTORY ../lib
-    ARCHIVE_OUTPUT_DIRECTORY ../lib
-    RUNTIME_OUTPUT_DIRECTORY ../bin
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../bin
 )

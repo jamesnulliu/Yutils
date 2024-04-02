@@ -8,5 +8,5 @@ int main(int argc, char* argv[])
     argParser.addOption("f", "file", "string", "World.cpp");
     argParser.parse(argc, argv);
     auto val = argParser.get<std::string>("f");
-    YCRITICAL("Value: {}\n", *val);
+    YCRITICAL("Value: {}", *val);
 }
