@@ -1,4 +1,4 @@
-# @Path: ./Yutils/src/CMakeLists.txt
+# @Path: Yutils/src/CMakeLists.txt
 
 # Minimum required CMake version
 cmake_minimum_required(VERSION 3.21)
@@ -9,11 +9,11 @@ set(LIBRARY_NAME Yutils)
 set(LIBRARY_VERSION 0.1)
 
 # Get all sources in: 
-# - ./Yutils/src/
-file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+# - Yutils/src/
+file(GLOB_RECURSE SOURCES ./*.cpp)
 
 # Build shared or static library
-# @see ./Yutils/CMakeLists.txt:option(BUILD_SHARED_LIBS ...)
+# @see Yutils/CMakeLists.txt:option(BUILD_SHARED_LIBS ...)
 if(BUILD_SHARED_LIBS)
     message(STATUS "[Yutils] Building shared library")
     add_library(${LIBRARY_NAME} SHARED ${SOURCES})
@@ -24,14 +24,14 @@ else()
 endif()
 
 # Specify include directories for this target
-target_include_directories(${LIBRARY_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(${LIBRARY_NAME} PRIVATE ../include)
 
 # Set the version of the library and output directories
 set_target_properties(
     ${LIBRARY_NAME} PROPERTIES
     VERSION ${LIBRARY_VERSION}
     OUTPUT_NAME ${LIBRARY_NAME}
-    LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib
-    ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib
-    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin
+    LIBRARY_OUTPUT_DIRECTORY ../lib
+    ARCHIVE_OUTPUT_DIRECTORY ../lib
+    RUNTIME_OUTPUT_DIRECTORY ../bin
 )

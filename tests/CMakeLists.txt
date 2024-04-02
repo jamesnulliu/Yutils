@@ -1,4 +1,4 @@
-# @Path: ./Yutils/tests/CMakeLists.txt
+# @Path: Yutils/tests/CMakeLists.txt
 
 # Minimum required CMake version
 cmake_minimum_required(VERSION 3.21)
@@ -10,14 +10,14 @@ Project(YutilsTests)
 add_executable(${PROJECT_NAME} main.cpp)
 
 # Set target include directories:
-# - ./Yutils/include
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+# - Yutils/include
+target_include_directories(${PROJECT_NAME} PRIVATE ../include)
 
 # Link to Yutils library automatically
-# @see ./Yutils/src/CMakeLists.txt:add_library(${LIBRARY_NAME} ...)
+# @see Yutils/src/CMakeLists.txt:add_library(${LIBRARY_NAME} ...)
 target_link_libraries(${PROJECT_NAME} PRIVATE Yutils)
 # Or link to the library manually
-# > target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib)
+# > target_link_libraries(${PROJECT_NAME} PRIVATE ../lib)
 
 if (BUILD_SHARED_LIBS)
     # Define YUTILS_IMPORT when using the DLL, critical for windows
@@ -27,5 +27,5 @@ endif()
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY 
-    ${PROJECT_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}
+    ../bin/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}
 )
