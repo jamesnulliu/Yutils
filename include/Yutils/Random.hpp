@@ -11,11 +11,11 @@ namespace yutils
 
 template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
-class yRandUniform
+class RandUniform
 {
 public:
-    explicit yRandUniform() = default;
-    yRandUniform& operator()(const xRandUniform&) = delete;
+    explicit RandUniform() = default;
+    RandUniform& operator()(const RandUniform&) = delete;
 
 public:
     inline _ValTy operator()(double min, double max) const
@@ -68,19 +68,19 @@ private:
 
 template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
-std::random_device yRandUniform<_ValTy>::_rd{};
+std::random_device RandUniform<_ValTy>::_rd{};
 
 template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
-thread_local std::default_random_engine yRandUniform<_ValTy>::m_engine{_rd()};
+thread_local std::default_random_engine RandUniform<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
-std::uniform_real_distribution<double>* yRandUniform<_ValTy>::m_distribution{nullptr};
+std::uniform_real_distribution<double>* RandUniform<_ValTy>::m_distribution{nullptr};
 
 template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
-class yRandNormal
+class RandNormal
 {
 public:
     inline _ValTy operator()(double mean, double stddev) const
@@ -120,14 +120,14 @@ private:
 
 template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
-std::random_device yRandNormal<_ValTy>::_rd{};
+std::random_device RandNormal<_ValTy>::_rd{};
 
 template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
-thread_local std::default_random_engine yRandNormal<_ValTy>::m_engine{_rd()};
+thread_local std::default_random_engine RandNormal<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
-std::normal_distribution<double>* yRandNormal<_ValTy>::m_distribution{nullptr};
+std::normal_distribution<double>* RandNormal<_ValTy>::m_distribution{nullptr};
 
 }  // namespace yutils

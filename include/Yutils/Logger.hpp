@@ -26,7 +26,7 @@ namespace yutils
 
 #define _YUTILS_LOG_FMT "[{}:{}|{}] >>> {}\n"
 
-#define YPRINT(...) std::cout << std::format(__VA_ARGS__)
+#define YPRINT(...) std::cout << std::format(__VA_ARGS__) << std::endl
 
 #define YTRACE(...)                                                                        \
     std::cout << std::format(_YUTILS_LOG_FMT, yutils::_sourceFileName(__FILE__), __LINE__, \
@@ -51,3 +51,4 @@ namespace yutils
     std::cout << std::format(_YUTILS_LOG_CYAN _YUTILS_LOG_FMT _YUTILS_LOG_COLOR_RESET,  \
                              yutils::_sourceFileName(__FILE__), __LINE__, __FUNCTION__, \
                              std::format(__VA_ARGS__))
+                             
