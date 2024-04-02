@@ -1,17 +1,19 @@
 cmake_minimum_required(VERSION 3.21)
 
-option(BUILD_SHARED_LIBS "Building using shared libraries." OFF)
+# Set lib name and version
+set(LIBRARY_NAME Yutils)
+set(LIBRARY_VERSION 1.0)
 
-set(LIBRARY_NAME Yutils) # Library name
-set(LIBRARY_VERSION 1.0) # Library version
-
+# Get all sources
 file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
+# `BUILD_SHARED_LIBS` is defined in the root CMakeLists.txt
 if(BUILD_SHARED_LIBS)
     message(STATUS "Building shared library")
     add_library(${LIBRARY_NAME} SHARED ${SOURCES})
     target_compile_definitions(${LIBRARY_NAME} PRIVATE YUTILS_EXPORT)
 else()
+    message(STATUS "Building static library")
     add_library(${LIBRARY_NAME} STATIC ${SOURCES})
 endif()
 

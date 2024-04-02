@@ -1,8 +1,12 @@
 # Minimum required CMake version
 cmake_minimum_required(VERSION 3.21)
-
-# Project name
+# Project name and version
 project(Yutils VERSION 0.1)
+
+# Whether to build Yutils as a shared library
+option(BUILD_SHARED_LIBS "Building using shared libraries." ON)
+# Whether to build "./tests" for testing
+option(BUILD_TESTS "Building tests." OFF)
 
 # Set C++ standard to C++23
 set(CMAKE_CXX_STANDARD 23)
@@ -26,4 +30,9 @@ else()
 endif()
 
 add_subdirectory(src)
-add_subdirectory(tests)
+
+if (BUILD_TESTS)
+    # I don't know how to use GTest with CMake yet
+    # > enable_testing()
+    add_subdirectory(tests)
+endif()
