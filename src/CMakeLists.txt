@@ -8,12 +8,12 @@ set(LIBRARY_NAME Yutils)
 # Library version: 0.1
 set(LIBRARY_VERSION 0.1)
 
-# Get all sources in: 
+# Get all source files in: 
 # - Yutils/src/
-file(GLOB_RECURSE SOURCES ./*.cpp)
+file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 # Build shared or static library
-# @see Yutils/CMakeLists.txt:option(BUILD_SHARED_LIBS ...)
+# @see Yutils/CMakeLists.txt: option(BUILD_SHARED_LIBS ...)
 if(BUILD_SHARED_LIBS)
     message(STATUS "[Yutils] Building shared library")
     add_library(${LIBRARY_NAME} SHARED ${SOURCES})

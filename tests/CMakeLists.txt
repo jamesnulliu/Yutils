@@ -14,7 +14,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 # Link to Yutils library automatically
-# @see Yutils/src/CMakeLists.txt:add_library(${LIBRARY_NAME} ...)
+# @see Yutils/src/CMakeLists.txt: add_library(${LIBRARY_NAME} ...)
 target_link_libraries(${PROJECT_NAME} PRIVATE Yutils)
 # Or link to the library manually
 # > target_link_libraries(${PROJECT_NAME} PRIVATE ../lib)

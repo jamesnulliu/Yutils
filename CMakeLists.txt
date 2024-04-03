@@ -6,9 +6,9 @@ cmake_minimum_required(VERSION 3.21)
 project(Yutils VERSION 0.1)
 
 # Whether to build Yutils as a shared library
-option(BUILD_SHARED_LIBS "Building using shared libraries." ON)
+option(BUILD_SHARED_LIBS "Building using shared libraries." OFF)
 # Whether to build "./tests" for testing
-option(BUILD_TESTS "Building tests." ON)
+option(BUILD_TESTS "Building tests." OFF)
 
 # Set C++ standard to C++23
 set(CMAKE_CXX_STANDARD 23)
