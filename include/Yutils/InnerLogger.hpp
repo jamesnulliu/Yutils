@@ -15,8 +15,8 @@ constexpr std::string_view _innerSrcFileName(std::string_view s)
 }
 }  // namespace yutils
 
-#ifndef INNER_YLOG_LEVEL
-#define INNER_YLOG_LEVEL 5
+#ifndef _INNER_YLOG_LEVEL
+#define _INNER_YLOG_LEVEL 5
 #endif
 
 #define _INNER_YLOG_COLOR_RESET "\033[0m"
@@ -47,36 +47,36 @@ constexpr std::string_view _innerSrcFileName(std::string_view s)
         yutils::_innerSrcFileName(__FILE__), __LINE__, __FUNCTION__
 
 #define _INNER_HOW_YCRITICAL                                                                       \
-    _INNER_YLOG_CYAN "{:>10}[{}:{}|{}]: {}\n" _INNER_YLOG_COLOR_RESET, "[CRITICAL]",               \
+    _INNER_YLOG_MAGENTA "{:>10}[{}:{}|{}]: {}\n" _INNER_YLOG_COLOR_RESET, "[CRITICAL]",               \
         yutils::_innerSrcFileName(__FILE__), __LINE__, __FUNCTION__
 // Define the log format <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 // Define the log functions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#if INNER_YLOG_LEVEL > 4
+#if _INNER_YLOG_LEVEL > 4
 #define _INNER_YTRACE(...) std::cout << std::format(_INNER_HOW_YTRACE, std::format(__VA_ARGS__))
 #else
 #define _INNER_YTRACE(...)
 #endif
 
-#if INNER_YLOG_LEVEL > 3
+#if _INNER_YLOG_LEVEL > 3
 #define _INNER_YINFO(...) std::cout << std::format(_INNER_HOW_YINFO, std::format(__VA_ARGS__))
 #else
 #define _INNER_YINFO(...)
 #endif
 
-#if INNER_YLOG_LEVEL > 2
+#if _INNER_YLOG_LEVEL > 2
 #define _INNER_YWARNING(...) std::cout << std::format(_INNER_HOW_YWARNING, std::format(__VA_ARGS__))
 #else
 #define _INNER_YWARNING(...)
 #endif
 
-#if INNER_YLOG_LEVEL > 1
+#if _INNER_YLOG_LEVEL > 1
 #define _INNER_YERROR(...) std::cout << std::format(_INNER_HOW_YERROR, std::format(__VA_ARGS__))
 #else
 #define _INNER_YERROR(...)
 #endif
 
-#if INNER_YLOG_LEVEL > 0
+#if _INNER_YLOG_LEVEL > 0
 #define _INNER_YCRITICAL(...)                                                                      \
     std::cout << std::format(_INNER_HOW_YCRITICAL, std::format(__VA_ARGS__))
 #else

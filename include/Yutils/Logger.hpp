@@ -99,7 +99,7 @@ constexpr std::string_view _srcFileName(std::string_view s)
 
 #ifndef _HOW_YCRITICAL
 #define _HOW_YCRITICAL                                                                             \
-    _YLOG_CYAN "{:>10}[{}:{}|{}]: {}\n" _YLOG_COLOR_RESET, "[CRITICAL]",                           \
+    _YLOG_MAGENTA "{:>10}[{}:{}|{}]: {}\n" _YLOG_COLOR_RESET, "[CRITICAL]",                           \
         yutils::_srcFileName(__FILE__), __LINE__, __FUNCTION__
 #endif
 // Define the log format <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
