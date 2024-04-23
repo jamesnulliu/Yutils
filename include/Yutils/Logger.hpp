@@ -31,7 +31,7 @@
  * For example, if you write:
  *
  * ```cpp
- * // mian.cpp
+ * // main.cpp
  * #define _HOW_YTRACE "{:>10}[{}]: {}\n", "[TRACE]", __FUNCTION__
  * #include "Logger.hpp"
  * int main() { YTRACE("Hello, World!"); }
