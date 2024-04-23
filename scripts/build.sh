@@ -10,9 +10,9 @@ mkdir -p $PROJECT_ROOT_DIR/build
 
 cd $PROJECT_ROOT_DIR/build
 
-cmake .. -DCMAKE_BUILD_TYPE=$build_type
+cmake .. -DCMAKE_BUILD_TYPE=$build_type -DBUILD_TESTS=ON
 
-make -j$(nproc)
+make -j $(nproc)
 
 cd $PROJECT_ROOT_DIR
 
