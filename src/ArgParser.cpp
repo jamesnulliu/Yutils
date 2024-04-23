@@ -7,11 +7,11 @@ void ArgParser::addOption(std::string_view name, std::string_view description,
                           std::string_view type, std::optional<std::string> defaultValue)
 {
     if (m_options.find(name) != m_options.end()) {
-        YERROR("Option \"{}\" already exists", name);
+        _INNER_YERROR("Option \"{}\" already exists", name);
         return;
     }
     if (type != "string" && type != "int" && type != "float" && type != "bool") {
-        YERROR("Invalid type: \"{}\"; Supported types are: string, int, float, bool", type);
+        _INNER_YERROR("Invalid type: \"{}\"; Supported types are: string, int, float, bool", type);
         return;
     }
     if (defaultValue && type != "string") {
@@ -19,19 +19,19 @@ void ArgParser::addOption(std::string_view name, std::string_view description,
             try {
                 std::stoi(defaultValue.value());
             } catch (const std::invalid_argument& e) {
-                YERROR("Invalid default value for option \"{}\"; Expected type: int", name);
+                _INNER_YERROR("Invalid default value for option \"{}\"; Expected type: int", name);
                 return;
             }
         } else if (type == "float") {
             try {
                 std::stof(defaultValue.value());
             } catch (const std::invalid_argument& e) {
-                YERROR("Invalid default value for option \"{}\"; Expected type: float", name);
+                _INNER_YERROR("Invalid default value for option \"{}\"; Expected type: float", name);
                 return;
             }
         } else if (type == "bool") {
             if (defaultValue.value() != "true" && defaultValue.value() != "false") {
-                YERROR("Invalid default value for option \"{}\"; Expected type: bool", name);
+                _INNER_YERROR("Invalid default value for option \"{}\"; Expected type: bool", name);
                 return;
             }
         }
@@ -49,7 +49,7 @@ bool ArgParser::parse(int argc, char* argv[]) noexcept
         } else if (arg.starts_with("-")) {
             dashCount = 1;
         } else {
-            YERROR("Invalid argument: \"{}\"; "
+            _INNER_YERROR("Invalid argument: \"{}\"; "
                         "An argument must starts with \"-\" or \"--\"",
                         arg);
             return false;
@@ -61,11 +61,11 @@ bool ArgParser::parse(int argc, char* argv[]) noexcept
                 it->second.value = argv[i + 1];
                 ++i;
             } else {
-                YERROR("Option \"{}\" requires a value", arg);
+                _INNER_YERROR("Option \"{}\" requires a value", arg);
                 return false;
             }
         } else {
-            YERROR("Unknown option: \"{}\"", arg);
+            _INNER_YERROR("Unknown option: \"{}\"", arg);
             return false;
         }
     }

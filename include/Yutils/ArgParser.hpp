@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 #include "Yutils/PreDefined.hpp"
-#include "Yutils/Logger.hpp"
+#include "Yutils/InnerLogger.hpp"
 
 namespace yutils
 {
@@ -33,7 +33,7 @@ public:
         T value;
         ss >> value;
         if (ss.fail()) {
-            YWARNING("Failed to convert {} to type {}", it->second.value.value(), it->second.type);
+            _INNER_YWARNING("Failed to convert {} to type {}", it->second.value.value(), it->second.type);
             return std::nullopt;
         }
         return value;
