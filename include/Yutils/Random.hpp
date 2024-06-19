@@ -130,4 +130,60 @@ template <class _ValTy>
     requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 std::normal_distribution<double>* RandNormal<_ValTy>::m_distribution{nullptr};
 
+template<class _ValTy>
+class DistributionVisualizer
+{
+public:
+    explicit DistributionVisualizer() = default;
+    DistributionVisualizer& operator=(const DistributionVisualizer&) = delete;
+public:
+    /**
+     * @brief Visualizes the distribution of a vector of random numbers.
+     * 
+     * @param randVec The vector of random numbers.
+     * @param binNum The number of bins to divide the range of the random numbers.
+     * @param maxStarNum The maximum number of stars to print in each bin.
+     */
+    void operator()(
+        const std::vector<_ValTy>& randVec,
+        const size_t binNum = 10,
+        const size_t maxStarNum = 15
+        ) const
+    {
+        if (randVec.empty()) return;
+        _ValTy minElem = *(std::min_element(randVec.begin(), randVec.end()));
+        _ValTy maxElem = *(std::max_element(randVec.begin(), randVec.end()));
+        _ValTy range = maxElem - minElem;
+
+        if (range == 0) {
+            std::cout << "All the elements are: " << maxElem << std::endl;
+            return;
+        }
+
+        double average = std::accumulate(randVec.begin(), randVec.end(), 0.0) / randVec.size();
+        std::vector<size_t> bins(binNum);
+
+        std::cout << "min: " << minElem << " max: " << maxElem << " average: " << average << std::endl;
+
+        for (const auto& val : randVec) {
+            size_t bin = static_cast<size_t>(double(val - minElem) / range * binNum);
+            if (bin == bins.size()) { bin -= 1; }
+            ++bins[bin];
+        }
+        size_t maxS = *(std::max_element(bins.begin(), bins.end()));
+        double resizer = double(maxS) / maxStarNum;
+        for (auto& val : bins) {
+            val = (size_t)ceil(val / resizer);
+        }
+        for (size_t i = 0; i < bins.size(); ++i) {
+            std::cout << i << ": ";
+            for (size_t j = 0; j < bins[i]; ++j) {
+                std::cout << "*";
+            }
+            std::cout << std::endl;
+        }
+        return;
+    }
+};
+
 }  // namespace yutils
