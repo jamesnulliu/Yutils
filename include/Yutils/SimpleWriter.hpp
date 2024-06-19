@@ -5,15 +5,17 @@
 #include <string>
 #include <vector>
 
+#include "Yutils/PreDefined.hpp"
+
 namespace yutils
 {
 class SimpleWriter
 {
 public:
-    explicit SimpleWriter(const std::string& filename, size_t numColumns, bool autoFlush = false);
-    SimpleWriter(const SimpleWriter&) = delete;
-    SimpleWriter& operator=(const SimpleWriter&) = delete;
-    ~SimpleWriter();
+    YUTILS_API explicit SimpleWriter(const std::string& filename, size_t numColumns, bool autoFlush = false);
+    YUTILS_API SimpleWriter(const SimpleWriter&) = delete;
+    YUTILS_API SimpleWriter& operator=(const SimpleWriter&) = delete;
+    YUTILS_API ~SimpleWriter();
 
 public:
     template <typename... Args>
@@ -31,7 +33,7 @@ public:
         }
     }
 
-    void flush();
+    YUTILS_API void flush();
 
 private:
     std::ofstream m_file;

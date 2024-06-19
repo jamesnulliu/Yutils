@@ -17,14 +17,14 @@ void ArgParser::addOption(std::string_view name, std::string_view description,
     if (defaultValue && type != "string") {
         if (type == "int") {
             try {
-                std::stoi(defaultValue.value());
+                auto ret = std::stoi(defaultValue.value());
             } catch (const std::invalid_argument& e) {
                 _INNER_YERROR("Invalid default value for option \"{}\"; Expected type: int", name);
                 return;
             }
         } else if (type == "float") {
             try {
-                std::stof(defaultValue.value());
+                int ret = std::stof(defaultValue.value());
             } catch (const std::invalid_argument& e) {
                 _INNER_YERROR("Invalid default value for option \"{}\"; Expected type: float", name);
                 return;

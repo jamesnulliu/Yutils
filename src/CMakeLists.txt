@@ -8,9 +8,8 @@ set(LIBRARY_NAME Yutils)
 # Library version: 0.1
 set(LIBRARY_VERSION 0.1)
 
-# Get all source files in: 
-# - Yutils/src/
-file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+# Get all source files
+file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Yutils/*.cpp")
 
 # Build shared or static library
 # @see Yutils/CMakeLists.txt: option(BUILD_SHARED_LIBS ...)
@@ -31,10 +30,6 @@ if (NOT LIB_OUTPUT_DIR)
     set(LIB_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 endif()
 
-if (NOT BIN_OUTPUT_DIR)
-    set(BIN_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
-endif()
-
 # Set the version of the library and output directories
 set_target_properties(
     ${LIBRARY_NAME} PROPERTIES
@@ -42,5 +37,5 @@ set_target_properties(
     OUTPUT_NAME ${LIBRARY_NAME}
     LIBRARY_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
     ARCHIVE_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
-    RUNTIME_OUTPUT_DIRECTORY ${BIN_OUTPUT_DIR}
+    RUNTIME_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
 )

@@ -13,8 +13,8 @@ namespace yutils
 class ArgParser
 {
 public:
-    explicit ArgParser() = default;
-    ~ArgParser() = default;
+    YUTILS_API explicit ArgParser() = default;
+    YUTILS_API ~ArgParser() = default;
 
     YUTILS_API void addOption(std::string_view name, std::string_view description,
                               std::string_view type,
