@@ -55,7 +55,7 @@ $CMakeArgs = @(
     "-DBUILD_TESTS=$BuildTest",
     "-DLIB_OUTPUT_DIR=$LibOutputDir",
     "-DBUILD_SHARED_LIBS=$BuildSharedLibs",
-    "-G=Ninja"  # I don't really like msbuild
+    "-G=MinGW Makefiles"  # I don't really like msvc
 )
 
 & cmake .. $CMakeArgs
