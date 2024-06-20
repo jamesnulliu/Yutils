@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-BUILD_MODE="Debug"
+BUILD_MODE="Release"
 BUILD_TEST="OFF"
 LIB_OUTPUT_DIR=""
 BIN_OUTPUT_DIR=""
@@ -48,9 +48,10 @@ cmake ..  \
     -DCMAKE_BUILD_TYPE=$build_type  \
     -DBUILD_TESTS=ON  \
     -DLIB_OUTPUT_DIR=$lib_output_dir  \
-    -DBUILD_SHARED_LIBS=$build_shared_libs
+    -DBUILD_SHARED_LIBS=$build_shared_libs  \
+    -G="Unix Makefiles"
 
-make -j $(nproc)
+cmake --build . --parallel $(nproc)
 
 cd $PROJECT_ROOT_DIR
 

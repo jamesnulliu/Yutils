@@ -1,7 +1,9 @@
+$PROJECT_ROOT_DIR = Get-Location
+
 # Default values
 $BuildMode = "Debug"
 $BuildTest = "OFF"
-$LibOutputDir = ""
+$LibOutputDir = "$PROJECT_ROOT_DIR/lib"
 $BuildSharedLibs = "OFF"
 
 # Parse arguments
@@ -39,14 +41,6 @@ for ($i = 0; $i -lt $args.Count; $i++) {
     }
 }
 
-# Output the parsed values
-Write-Host "BUILD_MODE: $BuildMode"
-Write-Host "BUILD_TEST: $BuildTest"
-Write-Host "LIB_OUTPUT_DIR: $LibOutputDir"
-Write-Host "BUILD_SHARED_LIBS: $BuildSharedLibs"
-
-
-$PROJECT_ROOT_DIR = Get-Location
 
 if (Test-Path "$PROJECT_ROOT_DIR/build") {
     Remove-Item "$PROJECT_ROOT_DIR/build" -Recurse -Force
@@ -60,12 +54,13 @@ $CMakeArgs = @(
     "-DCMAKE_BUILD_TYPE=$BuildMode",
     "-DBUILD_TESTS=$BuildTest",
     "-DLIB_OUTPUT_DIR=$LibOutputDir",
-    "-DBUILD_SHARED_LIBS=$BuildSharedLibs"
+    "-DBUILD_SHARED_LIBS=$BuildSharedLibs",
+    "-G=Ninja"  # I don't really like msbuild
 )
 
 & cmake .. $CMakeArgs
 
-& cmake --build . --config $BuildMode
+& cmake --build . --parallel $env:NUMBER_OF_PROCESSORS
 
 Set-Location $PROJECT_ROOT_DIR
 

@@ -25,16 +25,14 @@ endif()
 # Specify include directories for this target
 target_include_directories(${LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
-# If LIB_OUTPUT_DIR is not set
-if (NOT LIB_OUTPUT_DIR)
-    set(LIB_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
-endif()
+# set(LIB_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+
+message(STATUS "[Yutils] Library output directory: ${LIB_OUTPUT_DIR}")
 
 # Set the version of the library and output directories
 set_target_properties(
     ${LIBRARY_NAME} PROPERTIES
     VERSION ${LIBRARY_VERSION}
-    OUTPUT_NAME ${LIBRARY_NAME}
     LIBRARY_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
     ARCHIVE_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
     RUNTIME_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
