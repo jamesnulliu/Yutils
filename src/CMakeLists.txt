@@ -25,7 +25,9 @@ endif()
 # Specify include directories for this target
 target_include_directories(${LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
-# set(LIB_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+if (NOT DEFINED LIB_OUTPUT_DIR)
+    set(LIB_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+endif()
 
 message(STATUS "[Yutils] Library output directory: ${LIB_OUTPUT_DIR}")
 

@@ -1,24 +1,25 @@
 #!/bin/bash
 
+PROJECT_ROOT_DIR=$(pwd)
+
 # Default values
-BUILD_MODE="Release"
-BUILD_TEST="OFF"
-LIB_OUTPUT_DIR=""
-BIN_OUTPUT_DIR=""
-BUILD_SHARED_LIBS="OFF"
+BuildType="Release"
+BuildTest="OFF"
+LibOutputDir="${PROJECT_ROOT_DIR}/lib"
+BuildSharedLibs="OFF"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
         Release|Debug)
-            BUILD_MODE=$1
+            BuildType=$1
             ;;
         -t|--test)
-            BUILD_TEST="ON"
+            BuildTest="ON"
             ;;
         --libo)
             if [[ -n $2 ]]; then
-                LIB_OUTPUT_DIR=$2
+                LibOutputDir=$2
                 shift
             else
                 echo "Error: '--libo' requires a directory path as the next argument."
@@ -26,7 +27,7 @@ while [[ $# -gt 0 ]]; do
             fi
             ;;
         --shared)
-            BUILD_SHARED_LIBS="ON"
+            BuildSharedLibs="ON"
             ;;
         *)
             echo "Error: Invalid argument '$1'"
@@ -36,8 +37,6 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-PROJECT_ROOT_DIR=$(pwd)
-
 rm -rf $PROJECT_ROOT_DIR/build
 
 mkdir -p $PROJECT_ROOT_DIR/build
@@ -45,10 +44,10 @@ mkdir -p $PROJECT_ROOT_DIR/build
 cd $PROJECT_ROOT_DIR/build
 
 cmake ..  \
-    -DCMAKE_BUILD_TYPE=$build_type  \
-    -DBUILD_TESTS=ON  \
-    -DLIB_OUTPUT_DIR=$lib_output_dir  \
-    -DBUILD_SHARED_LIBS=$build_shared_libs  \
+    -DCMAKE_BUILD_TYPE=$BuildType \
+    -DBUILD_TESTS=$BuildTest  \
+    -DLIB_OUTPUT_DIR=$LibOutputDir  \
+    -DBUILD_SHARED_LIBS=$BuildSharedLibs \
     -G="Unix Makefiles"
 
 cmake --build . --parallel $(nproc)
