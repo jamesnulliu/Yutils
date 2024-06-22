@@ -28,4 +28,6 @@ int main(int argc, char* argv[])
 
     timeCounter.endCounting();
     YTRACE("{}", timeCounter.msecond());
+
+    auto randVec = rand.generateVec(100, 0, 100);
 }

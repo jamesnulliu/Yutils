@@ -1,5 +1,6 @@
 #pragma once
 #include "Yutils/Concepts.hpp"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <numeric>
@@ -39,7 +40,7 @@ public:
         }
     }
 
-    std::vector<_ValTy> generateVec(size_t size, double min, double max,
+    std::vector<_ValTy> generateVec(std::size_t size, double min, double max,
                                     const std::string& saveLocation = "") const
     {
         std::vector<_ValTy> vec;
@@ -78,6 +79,10 @@ template <class _ValTy>
 class RandNormal
 {
 public:
+    explicit RandNormal() = default;
+    RandNormal& operator()(const RandNormal&) = delete;
+
+public:
     inline _ValTy operator()(double mean, double stddev) const
     {
         if (m_distribution == nullptr || m_distribution->mean() != mean ||
@@ -87,7 +92,12 @@ public:
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    std::vector<_ValTy> generateVec(size_t size, double mean, double stddev,
+    inline _ValTy operator()() const
+    {
+        return static_cast<_ValTy>(m_distribution->operator()(m_engine));
+    }
+
+    std::vector<_ValTy> generateVec(std::size_t size, double mean, double stddev,
                                     const std::string& saveLocation = "") const
     {
         std::vector<_ValTy> vec;
@@ -122,27 +132,26 @@ thread_local std::default_random_engine RandNormal<_ValTy>::m_engine{_rd()};
 template <class _ValTy>
 std::normal_distribution<double>* RandNormal<_ValTy>::m_distribution{nullptr};
 
-template<class _ValTy>
+template <class _ValTy>
 class DistributionVisualizer
 {
 public:
     explicit DistributionVisualizer() = default;
     DistributionVisualizer& operator=(const DistributionVisualizer&) = delete;
+
 public:
     /**
      * @brief Visualizes the distribution of a vector of random numbers.
-     * 
+     *
      * @param randVec The vector of random numbers.
      * @param binNum The number of bins to divide the range of the random numbers.
      * @param maxStarNum The maximum number of stars to print in each bin.
      */
-    void operator()(
-        const std::vector<_ValTy>& randVec,
-        const size_t binNum = 10,
-        const size_t maxStarNum = 15
-        ) const
+    void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
+                    const std::size_t maxStarNum = 15) const
     {
-        if (randVec.empty()) return;
+        if (randVec.empty())
+            return;
         _ValTy minElem = *(std::min_element(randVec.begin(), randVec.end()));
         _ValTy maxElem = *(std::max_element(randVec.begin(), randVec.end()));
         _ValTy range = maxElem - minElem;
@@ -153,23 +162,26 @@ public:
         }
 
         double average = std::accumulate(randVec.begin(), randVec.end(), 0.0) / randVec.size();
-        std::vector<size_t> bins(binNum);
+        std::vector<std::size_t> bins(binNum);
 
-        std::cout << "min: " << minElem << " max: " << maxElem << " average: " << average << std::endl;
+        std::cout << "min: " << minElem << " max: " << maxElem << " average: " << average
+                  << std::endl;
 
         for (const auto& val : randVec) {
-            size_t bin = static_cast<size_t>(double(val - minElem) / range * binNum);
-            if (bin == bins.size()) { bin -= 1; }
+            std::size_t bin = static_cast<std::size_t>(double(val - minElem) / range * binNum);
+            if (bin == bins.size()) {
+                bin -= 1;
+            }
             ++bins[bin];
         }
-        size_t maxS = *(std::max_element(bins.begin(), bins.end()));
+        std::size_t maxS = *(std::max_element(bins.begin(), bins.end()));
         double resizer = double(maxS) / maxStarNum;
         for (auto& val : bins) {
-            val = (size_t)ceil(val / resizer);
+            val = (std::size_t) ceil(val / resizer);
         }
-        for (size_t i = 0; i < bins.size(); ++i) {
+        for (std::size_t i = 0; i < bins.size(); ++i) {
             std::cout << i << ": ";
-            for (size_t j = 0; j < bins[i]; ++j) {
+            for (std::size_t j = 0; j < bins[i]; ++j) {
                 std::cout << "*";
             }
             std::cout << std::endl;
