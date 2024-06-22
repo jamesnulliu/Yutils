@@ -30,4 +30,6 @@ int main(int argc, char* argv[])
     YTRACE("{}", timeCounter.msecond());
 
     auto randVec = rand.generateVec(100, 0, 100);
+    auto visualizer = yutils::DistributionVisualizer<int>();
+    visualizer(randVec, 10, 15);
 }
