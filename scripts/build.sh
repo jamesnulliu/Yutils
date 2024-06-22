@@ -48,7 +48,7 @@ cmake ..  \
     -DBUILD_TESTS=$BuildTest  \
     -DLIB_OUTPUT_DIR=$LibOutputDir  \
     -DBUILD_SHARED_LIBS=$BuildSharedLibs \
-    -G="Unix Makefiles"
+    -G="Ninja"
 
 cmake --build . --parallel $(nproc)
 

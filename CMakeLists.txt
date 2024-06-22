@@ -1,5 +1,3 @@
-# @Path: Yutils/CMakeLists.txt
-
 # Minimum required CMake version
 cmake_minimum_required(VERSION 3.21)
 # Project name and version
