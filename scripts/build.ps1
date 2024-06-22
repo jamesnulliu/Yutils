@@ -1,7 +1,7 @@
 $PROJECT_ROOT_DIR = Get-Location
 
 # Default values
-$BuildMode = "Debug"
+$BuildMode = "Release"
 $BuildTest = "OFF"
 $LibOutputDir = "$PROJECT_ROOT_DIR/lib"
 $BuildSharedLibs = "OFF"
@@ -55,12 +55,12 @@ $CMakeArgs = @(
     "-DBUILD_TESTS=$BuildTest",
     "-DLIB_OUTPUT_DIR=$LibOutputDir",
     "-DBUILD_SHARED_LIBS=$BuildSharedLibs",
-    "-G=MinGW Makefiles"  # I don't really like msvc
+    "-G=Ninja"  # I don't really like msvc
 )
 
 & cmake .. $CMakeArgs
 
-& cmake --build . --parallel $env:NUMBER_OF_PROCESSORS
+& cmake --build . --parallel $env:NUMBER_OF_PROCESSORS --clean-first
 
 Set-Location $PROJECT_ROOT_DIR
 
