@@ -5,6 +5,7 @@ $BuildMode = "Release"
 $BuildTest = "OFF"
 $LibOutputDir = "$PROJECT_ROOT_DIR/lib"
 $BuildSharedLibs = "OFF"
+$CleanFirst = ""
 
 # Parse arguments
 for ($i = 0; $i -lt $args.Count; $i++) {
@@ -34,6 +35,12 @@ for ($i = 0; $i -lt $args.Count; $i++) {
         "--shared" {
             $BuildSharedLibs = "ON"
         }
+        "-c" {
+            $CleanFirst = "--clean-first"
+        }
+        "--clean-first" {
+            $CleanFirst = "--clean-first"
+        }
         default {
             Write-Host "Error: Invalid argument '$($args[$i])'"
             exit 1
@@ -41,12 +48,9 @@ for ($i = 0; $i -lt $args.Count; $i++) {
     }
 }
 
-
-if (Test-Path "$PROJECT_ROOT_DIR/build") {
-    Remove-Item "$PROJECT_ROOT_DIR/build" -Recurse -Force
+if (-not (Test-Path "$PROJECT_ROOT_DIR/build")) {
+    New-Item -ItemType Directory -Path "$PROJECT_ROOT_DIR/build"
 }
-
-New-Item -ItemType Directory -Path "$PROJECT_ROOT_DIR/build"
 
 Set-Location "$PROJECT_ROOT_DIR/build"
 
@@ -60,7 +64,7 @@ $CMakeArgs = @(
 
 & cmake .. $CMakeArgs
 
-& cmake --build . --parallel $env:NUMBER_OF_PROCESSORS --clean-first
+& cmake --build . --parallel $env:NUMBER_OF_PROCESSORS $CleanFirst
 
 Set-Location $PROJECT_ROOT_DIR
 

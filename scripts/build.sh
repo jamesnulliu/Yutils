@@ -7,6 +7,7 @@ BuildType="Release"
 BuildTest="OFF"
 LibOutputDir="${PROJECT_ROOT_DIR}/lib"
 BuildSharedLibs="OFF"
+CleanFirst=""
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -29,6 +30,9 @@ while [[ $# -gt 0 ]]; do
         --shared)
             BuildSharedLibs="ON"
             ;;
+        -c|--clean)
+            CleanFirst="--clean-first"
+            ;;
         *)
             echo "Error: Invalid argument '$1'"
             exit 1
@@ -37,9 +41,9 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-rm -rf $PROJECT_ROOT_DIR/build
-
-mkdir -p $PROJECT_ROOT_DIR/build
+if [ ! -d $PROJECT_ROOT_DIR/build ]; then
+    mkdir -p $PROJECT_ROOT_DIR/build
+fi
 
 cd $PROJECT_ROOT_DIR/build
 
@@ -50,7 +54,7 @@ cmake ..  \
     -DBUILD_SHARED_LIBS=$BuildSharedLibs \
     -G="Ninja"
 
-cmake --build . --parallel $(nproc)
+cmake --build . --parallel $(nproc) $CleanFirst
 
 cd $PROJECT_ROOT_DIR
 

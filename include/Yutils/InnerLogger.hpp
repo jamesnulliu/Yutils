@@ -47,7 +47,7 @@ constexpr std::string_view _innerSrcFileName(std::string_view s)
         yutils::_innerSrcFileName(__FILE__), __LINE__, __FUNCTION__
 
 #define _INNER_HOW_YCRITICAL                                                                       \
-    _INNER_YLOG_MAGENTA "{:>10}[{}:{}|{}]: {}\n" _INNER_YLOG_COLOR_RESET, "[CRITICAL]",               \
+    _INNER_YLOG_MAGENTA "{:>10}[{}:{}|{}]: {}\n" _INNER_YLOG_COLOR_RESET, "[CRITICAL]",            \
         yutils::_innerSrcFileName(__FILE__), __LINE__, __FUNCTION__
 // Define the log format <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

@@ -15,7 +15,7 @@
  * You can change the log level by defining `YLOG_LEVEL` before including this file.
  *
  * Note that by default, YLOG_LEVEL = 5
- * 
+ *
  * - YTACE:     YLOG_LEVEL > 4
  * - YINFO:     YLOG_LEVEL > 3
  * - YWARNING:  YLOG_LEVEL > 2
@@ -99,7 +99,7 @@ constexpr std::string_view _srcFileName(std::string_view s)
 
 #ifndef _HOW_YCRITICAL
 #define _HOW_YCRITICAL                                                                             \
-    _YLOG_MAGENTA "{:>10}[{}:{}|{}]: {}\n" _YLOG_COLOR_RESET, "[CRITICAL]",                           \
+    _YLOG_MAGENTA "{:>10}[{}:{}|{}]: {}\n" _YLOG_COLOR_RESET, "[CRITICAL]",                        \
         yutils::_srcFileName(__FILE__), __LINE__, __FUNCTION__
 #endif
 // Define the log format <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
