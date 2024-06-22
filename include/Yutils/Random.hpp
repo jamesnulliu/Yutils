@@ -10,7 +10,6 @@ namespace yutils
 {
 
 template <class _ValTy>
-    requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 class RandUniform
 {
 public:
@@ -67,19 +66,15 @@ private:
 };
 
 template <class _ValTy>
-    requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 std::random_device RandUniform<_ValTy>::_rd{};
 
 template <class _ValTy>
-    requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 thread_local std::default_random_engine RandUniform<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
-    requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 std::uniform_real_distribution<double>* RandUniform<_ValTy>::m_distribution{nullptr};
 
 template <class _ValTy>
-    requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 class RandNormal
 {
 public:
@@ -119,15 +114,12 @@ private:
 };
 
 template <class _ValTy>
-    requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 std::random_device RandNormal<_ValTy>::_rd{};
 
 template <class _ValTy>
-    requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 thread_local std::default_random_engine RandNormal<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
-    requires std::integral<_ValTy> || IsAnyOf<std::remove_cv_t<_ValTy>, float, double>
 std::normal_distribution<double>* RandNormal<_ValTy>::m_distribution{nullptr};
 
 template<class _ValTy>

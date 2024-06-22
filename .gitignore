@@ -40,3 +40,4 @@ lib/*
 
 .vscode/*
 !.vscode/*.example
+!.vscode/c_cpp_properties.json
