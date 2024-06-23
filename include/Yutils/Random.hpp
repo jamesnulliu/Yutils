@@ -138,11 +138,27 @@ concept _AccToDistributionVisualizer = requires(T lhs, T rhs) {
     { lhs + rhs };
     { lhs - rhs };
     { lhs / 1 * 1 };
-    { std::cout << lhs }; 
+    { std::cout << lhs };
 };
 
 template <class _ValTy>
 class DistributionVisualizer
+{
+public:
+    explicit DistributionVisualizer() = default;
+    DistributionVisualizer& operator=(const DistributionVisualizer&) = delete;
+
+public:
+    void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
+                    const std::size_t maxStarNum = 15) const
+    {
+        _INNER_YWARNING("The type of the elements in the vector is not supported by the visualizer.");
+    }
+};
+
+template <class _ValTy>
+    requires _AccToDistributionVisualizer<_ValTy>
+class DistributionVisualizer<_ValTy>
 {
 public:
     explicit DistributionVisualizer() = default;
@@ -159,11 +175,6 @@ public:
     void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
                     const std::size_t maxStarNum = 15) const
     {
-        if constexpr (!_AccToDistributionVisualizer<_ValTy>) {
-            _INNER_YWARNING("The type of the elements in the vector cannot be visualized.");
-            return;
-        }
-
         if (randVec.empty())
             return;
         _ValTy minElem = *(std::min_element(randVec.begin(), randVec.end()));
@@ -200,7 +211,6 @@ public:
             }
             std::cout << std::endl;
         }
-        return;
     }
 };
 
