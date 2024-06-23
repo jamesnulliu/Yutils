@@ -6,6 +6,8 @@
 #include <random>
 #include <vector>
 
+#include <Yutils/InnerLogger.hpp>
+
 namespace yutils
 {
 
@@ -131,6 +133,14 @@ thread_local std::default_random_engine RandNormal<_ValTy>::m_engine{_rd()};
 template <class _ValTy>
 std::normal_distribution<double>* RandNormal<_ValTy>::m_distribution{nullptr};
 
+template <typename T>
+concept _AccToDistributionVisualizer = requires(T lhs, T rhs) {
+    { lhs + rhs };
+    { lhs - rhs };
+    { lhs / 1 * 1 };
+    { std::cout << lhs }; 
+};
+
 template <class _ValTy>
 class DistributionVisualizer
 {
@@ -149,6 +159,11 @@ public:
     void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
                     const std::size_t maxStarNum = 15) const
     {
+        if constexpr (!_AccToDistributionVisualizer<_ValTy>) {
+            _INNER_YWARNING("The type of the elements in the vector cannot be visualized.");
+            return;
+        }
+
         if (randVec.empty())
             return;
         _ValTy minElem = *(std::min_element(randVec.begin(), randVec.end()));
