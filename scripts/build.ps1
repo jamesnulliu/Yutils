@@ -5,7 +5,7 @@ $BuildMode = "Release"
 $BuildTest = "OFF"
 $LibOutputDir = "$PROJECT_ROOT_DIR/lib"
 $BuildSharedLibs = "OFF"
-$CleanFirst = ""
+$CleanFirst = $false
 
 # Parse arguments
 for ($i = 0; $i -lt $args.Count; $i++) {
@@ -36,10 +36,10 @@ for ($i = 0; $i -lt $args.Count; $i++) {
             $BuildSharedLibs = "ON"
         }
         "-c" {
-            $CleanFirst = "--clean-first"
+            $CleanFirst = $true
         }
         "--clean-first" {
-            $CleanFirst = "--clean-first"
+            $CleanFirst = $true
         }
         default {
             Write-Host "Error: Invalid argument '$($args[$i])'"
@@ -64,7 +64,13 @@ $CMakeArgs = @(
 
 & cmake .. $CMakeArgs
 
-& cmake --build . --parallel $env:NUMBER_OF_PROCESSORS $CleanFirst
+$BuildArgs = @(
+    "--parallel",
+    "$env:NUMBER_OF_PROCESSORS"
+)
+if ($CleanFirst) { $BuildArgs += "--clean-first" }
+
+& cmake --build . $BuildArgs
 
 Set-Location $PROJECT_ROOT_DIR
 

@@ -7,7 +7,7 @@ BuildType="Release"
 BuildTest="OFF"
 LibOutputDir="${PROJECT_ROOT_DIR}/lib"
 BuildSharedLibs="OFF"
-CleanFirst=""
+CleanFirst="false"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -31,7 +31,7 @@ while [[ $# -gt 0 ]]; do
             BuildSharedLibs="ON"
             ;;
         -c|--clean)
-            CleanFirst="--clean-first"
+            CleanFirst="true"
             ;;
         *)
             echo "Error: Invalid argument '$1'"
@@ -54,7 +54,11 @@ cmake ..  \
     -DBUILD_SHARED_LIBS=$BuildSharedLibs \
     -G="Ninja"
 
-cmake --build . --parallel $(nproc) $CleanFirst
+if [ "$CleanFirst" = "true" ]; then
+    cmake --build . --parallel $(nproc) --clean-first
+else
+    cmake --build . --parallel $(nproc)
+fi
 
 cd $PROJECT_ROOT_DIR
 
