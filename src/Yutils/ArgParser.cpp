@@ -1,64 +1,49 @@
-#include <iostream>
 #include "Yutils/ArgParser.hpp"
+#include <iostream>
 
 namespace yutils
 {
-void ArgParser::addOption(std::string_view name, std::string_view description,
-                          std::string_view type, std::optional<std::string> defaultValue)
+void ArgParser::addOption(std::string optName, std::string type, std::string description,
+                          std::optional<std::string> defaultValue)
 {
-    if (m_options.find(name) != m_options.end()) {
-        _INNER_YERROR("Option \"{}\" already exists", name);
+    // Check if the option name is valid.
+    if (optName.empty() || !optName.starts_with('-')) {
+        _INNER_YWARNING(
+            "Skip adding option: Invalid option name: \"{}\"; Option name must start with '-'.",
+            optName);
         return;
     }
-    if (type != "string" && type != "int" && type != "float" && type != "bool") {
-        _INNER_YERROR("Invalid type: \"{}\"; Supported types are: string, int, float, bool", type);
+    // Check if the option already exists.
+    if (m_options.find(optName) != m_options.end()) {
+        _INNER_YWARNING("Skip adding option: Option \"{}\" already exists.", optName);
         return;
     }
-    if (defaultValue && type != "string") {
-        if (type == "int") {
-            try {
-                auto ret = std::stoi(defaultValue.value());
-            } catch (const std::invalid_argument& e) {
-                _INNER_YERROR("Invalid default value for option \"{}\"; Expected type: int", name);
-                return;
-            }
-        } else if (type == "float") {
-            try {
-                int ret = std::stof(defaultValue.value());
-            } catch (const std::invalid_argument& e) {
-                _INNER_YERROR("Invalid default value for option \"{}\"; Expected type: float", name);
-                return;
-            }
-        } else if (type == "bool") {
-            if (defaultValue.value() != "true" && defaultValue.value() != "false") {
-                _INNER_YERROR("Invalid default value for option \"{}\"; Expected type: bool", name);
-                return;
-            }
-        }
+    // If the option is a flag and no default value is provided, set the default value to "false".
+    if (type == "ArgParser::flag_t" && defaultValue == std::nullopt) {
+        defaultValue = "false";
     }
-    m_options[name] = {std::string(description), std::string(type), defaultValue};
+    // Add the option to the map.
+    m_options[optName] = {description, type, defaultValue};
 }
 
 bool ArgParser::parse(int argc, char* argv[]) noexcept
 {
     for (int i = 1; i < argc; ++i) {
-        std::string_view arg = argv[i];
+        std::string arg = argv[i];
         size_t dashCount = 0;
-        if (arg.starts_with("--")) {
-            dashCount = 2;
-        } else if (arg.starts_with("-")) {
-            dashCount = 1;
-        } else {
-            _INNER_YERROR("Invalid argument: \"{}\"; "
-                        "An argument must starts with \"-\" or \"--\"",
-                        arg);
-            return false;
-        }
-        arg.remove_prefix(dashCount);
         auto it = m_options.find(arg);
         if (it != m_options.end()) {
+            // Flag option:
+            if (it->second.type == "ArgParser::flag_t") {
+                // When meeting a flag option, set its value to "true".
+                it->second.strVal = "true";
+                continue;
+            }
+            // Value option:
             if (i + 1 < argc) {
-                it->second.value = argv[i + 1];
+                // Here we don't check if `strVal` can be converted to the supposed type.
+                // Type check should be done in `ArgParser::construct()`.
+                it->second.strVal = argv[i + 1];
                 ++i;
             } else {
                 _INNER_YERROR("Option \"{}\" requires a value", arg);

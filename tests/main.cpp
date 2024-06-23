@@ -1,8 +1,8 @@
 #include "Yutils/ArgParser.hpp"
 #include "Yutils/Logger.hpp"
-#include "Yutils/TimeCounter.hpp"
 #include "Yutils/Random.hpp"
 #include "Yutils/SimpleWriter.hpp"
+#include "Yutils/TimeCounter.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -10,18 +10,15 @@ int main(int argc, char* argv[])
     timeCounter.init();
     timeCounter.startCounting();
 
-    yutils::SimpleWriter writer("test.csv", 3);
-    writer.addRow("Hello", "World", "!");
-    writer.addRow("1", "2", "3");
-    writer.addRow("You", "are", "awesome");
-
-    YPRINT("Hello");
-
     yutils::ArgParser argParser;
-    argParser.addOption("f", "file", "string", "World.cpp");
+    argParser.addOption("--file", "std::string");
+    argParser.addOption("-flag", "ArgParser::flag_t");
     argParser.parse(argc, argv);
-    auto val = argParser.get<std::string>("f");
-    YCRITICAL("Value: {}", *val);
+
+    bool flag = argParser.get<bool>("-flag").value_or(false);
+    YINFO("Flag: {}", flag);
+    auto fileName = argParser.get<std::string>("--file").value_or("");
+    YINFO("File name: {}", fileName);
 
     yutils::RandUniform<int> rand;
     YINFO("{}", rand(0, 100));
