@@ -13,8 +13,8 @@ class SimpleWriter
 {
 public:
     YUTILS_API explicit SimpleWriter(const std::string& filename, size_t numColumns, bool autoFlush = false);
-    YUTILS_API SimpleWriter(const SimpleWriter&) = delete;
-    YUTILS_API SimpleWriter& operator=(const SimpleWriter&) = delete;
+    SimpleWriter(const SimpleWriter&) = delete;
+    SimpleWriter& operator=(const SimpleWriter&) = delete;
     YUTILS_API ~SimpleWriter();
 
 public:

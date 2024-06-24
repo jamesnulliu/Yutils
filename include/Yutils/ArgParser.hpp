@@ -48,8 +48,8 @@ public:
     using flag_t = bool;
 
 public:
-    YUTILS_API explicit ArgParser() = default;
-    YUTILS_API ~ArgParser() = default;
+    explicit ArgParser() = default;
+    ~ArgParser() = default;
 
 public:
     /**
