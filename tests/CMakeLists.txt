@@ -18,9 +18,9 @@ target_include_directories(
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Yutils)
 
-if (BUILD_SHARED_LIBS)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE YUTILS_IMPORT)
-endif()
+# if (BUILD_SHARED_LIBS)
+#     target_compile_definitions(${PROJECT_NAME} PRIVATE YUTILS_IMPORT)
+# endif()
 
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES

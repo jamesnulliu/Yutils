@@ -67,4 +67,17 @@ if ($Clean) { $BuildArgs += "--clean-first" }
 
 Set-Location $ProjHome
 
-Write-Host "Build finished."
+Write-Host "[Yutils] Build finished."
+
+if ($BuildSharedLibs -eq "ON") {
+    Write-Host "[Yutils|Note] >>>"
+    Write-Host "| You have built Yutils as a shared library."
+    Write-Host "| If you are using Windows, you may need to:"
+    Write-Host "|   - Copy the DLL files to the directory where the executable is located."
+    Write-Host "|   OR"
+    Write-Host "|   - Add the directory where the DLL files are located to the PATH environment variable."
+    Write-Host "| If you are using Linux, you may need to:"
+    Write-Host "|   - Add the directory where the shared library files are located to" `
+               "the LD_LIBRARY_PATH environment variable."
+
+}

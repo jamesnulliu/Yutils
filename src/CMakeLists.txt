@@ -13,11 +13,15 @@ file(
     "${CMAKE_CURRENT_SOURCE_DIR}/Yutils/*.cpp"
 )
 
+# Create Library
+add_library(${LIB_NAME} ${YUTILS_SRCS})
+
+# Add macros for shared library
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(${LIB_NAME} PRIVATE YUTILS_EXPORT)
 endif()
-add_library(${LIB_NAME} ${YUTILS_SRCS})
 
+# Include directories
 target_include_directories(
     ${LIB_NAME} PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
