@@ -5,6 +5,7 @@
 #include <numeric>
 #include <random>
 #include <vector>
+#include <format>
 
 #include <Yutils/InnerLogger.hpp>
 
@@ -20,30 +21,27 @@ public:
     RandUniform& operator()(const RandUniform&) = delete;
 
 public:
-    static _ValTy operator()(double min, double max) const
+    static void setParams(double min, double max)
     {
         if (m_distribution == nullptr || m_distribution->min() != min ||
             m_distribution->max() != max) {
-            m_distribution = new std::uniform_real_distribution<double>(min, max);
+            m_distribution = std::make_shared<std::uniform_real_distribution<double>>(min, max);
         }
+    }
+
+    static _ValTy operator()(double min, double max)
+    {
+        setParams(min, max);
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    static _ValTy operator()() const
+    static _ValTy operator()()
     {
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
-    }
-
-    static void setParams(double min, double max) const
-    {
-        if (m_distribution == nullptr || m_distribution->min() != min ||
-            m_distribution->max() != max) {
-            m_distribution = new std::uniform_real_distribution<double>(min, max);
-        }
     }
 
     static std::vector<_ValTy> generateVec(std::size_t size, double min, double max,
-                                           const std::string& saveLocation = "") const
+                                           const std::string& saveLocation = "")
     {
         std::vector<_ValTy> vec;
         std::uniform_real_distribution<double> distribution(min, max);
@@ -65,7 +63,7 @@ public:
 private:
     static std::random_device _rd;
     static thread_local std::default_random_engine m_engine;
-    static std::uniform_real_distribution<double>* m_distribution;
+    static std::shared_ptr<std::uniform_real_distribution<double>> m_distribution;
 };
 
 template <class _ValTy>
@@ -78,7 +76,7 @@ thread_local std::default_random_engine RandUniform<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
     requires std::is_arithmetic_v<_ValTy>
-std::uniform_real_distribution<double>* RandUniform<_ValTy>::m_distribution{nullptr};
+std::shared_ptr<std::uniform_real_distribution<double>> RandUniform<_ValTy>::m_distribution{};
 
 template <class _ValTy>
     requires std::is_arithmetic_v<_ValTy>
@@ -89,22 +87,27 @@ public:
     RandNormal& operator()(const RandNormal&) = delete;
 
 public:
-    static _ValTy operator()(double mean, double stddev) const
+    static void setParams(double mean, double stddev)
     {
         if (m_distribution == nullptr || m_distribution->mean() != mean ||
             m_distribution->stddev() != stddev) {
-            m_distribution = new std::normal_distribution<double>(mean, stddev);
+            m_distribution = std::make_shared<std::normal_distribution<double>>(mean, stddev);
         }
+    }
+
+    static _ValTy operator()(double mean, double stddev)
+    {
+        setParams(mean, stddev);
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    static _ValTy operator()() const
+    static _ValTy operator()()
     {
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
     static std::vector<_ValTy> generateVec(std::size_t size, double mean, double stddev,
-                                           const std::string& saveLocation = "") const
+                                           const std::string& saveLocation = "")
     {
         std::vector<_ValTy> vec;
         std::normal_distribution<double> distribution(mean, stddev);
@@ -149,8 +152,8 @@ public:
     DistributionVisualizer& operator=(const DistributionVisualizer&) = delete;
 
 public:
-    void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
-                    const std::size_t maxStarNum = 15) const
+    static void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
+                           const std::size_t maxStarNum = 15)
     {
         _INNER_YWARNING(
             "The type of the elements in the vector is not supported by the visualizer.");
@@ -174,7 +177,7 @@ public:
      * @param maxStarNum The maximum number of stars to print in each bin.
      */
     static void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
-                           const std::size_t maxStarNum = 15) const
+                           const std::size_t maxStarNum = 15, std::ostream& os = std::cout)
     {
         if (randVec.empty())
             return;
@@ -183,15 +186,14 @@ public:
         _ValTy range = maxElem - minElem;
 
         if (range == 0) {
-            std::cout << "All the elements are: " << maxElem << std::endl;
+            os << std::format("All the elements are: {}\n", maxElem);
             return;
         }
 
         double average = std::accumulate(randVec.begin(), randVec.end(), 0.0) / randVec.size();
         std::vector<std::size_t> bins(binNum);
 
-        std::cout << "min: " << minElem << " max: " << maxElem << " average: " << average
-                  << std::endl;
+        os << std::format("Min: {} | Max: {} | Average: {}\n", minElem, maxElem, average);
 
         for (const auto& val : randVec) {
             std::size_t bin = static_cast<std::size_t>(double(val - minElem) / range * binNum);
@@ -206,12 +208,14 @@ public:
             val = (std::size_t) ceil(val / resizer);
         }
         for (std::size_t i = 0; i < bins.size(); ++i) {
-            std::cout << i << ": ";
+            os << std::format("{:>3}: ", i);
             for (std::size_t j = 0; j < bins[i]; ++j) {
-                std::cout << "*";
+                os << "*";
             }
-            std::cout << std::endl;
+            os << "\n";
         }
+
+        os << std::flush;
     }
 };
 
