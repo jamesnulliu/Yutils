@@ -6,6 +6,7 @@
 #include <random>
 #include <vector>
 #include <format>
+#include <memory>
 
 #include <Yutils/InnerLogger.hpp>
 
