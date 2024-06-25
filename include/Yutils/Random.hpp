@@ -129,7 +129,7 @@ public:
 private:
     static std::random_device _rd;
     static thread_local std::default_random_engine m_engine;
-    static std::normal_distribution<double>* m_distribution;
+    static std::shared_ptr<std::normal_distribution<double>> m_distribution;
 };
 
 template <class _ValTy>
@@ -142,7 +142,7 @@ thread_local std::default_random_engine RandNormal<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
     requires std::is_arithmetic_v<_ValTy>
-std::normal_distribution<double>* RandNormal<_ValTy>::m_distribution{nullptr};
+std::shared_ptr<std::normal_distribution<double>> RandNormal<_ValTy>::m_distribution{nullptr};
 
 template <class _ValTy>
 class DistributionVisualizer
