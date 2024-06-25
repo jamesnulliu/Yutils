@@ -1,13 +1,14 @@
 #!/bin/bash
 
-PROJECT_ROOT_DIR=$(pwd)
+ProjHome=$(pwd)
 
 # Default values
 BuildType="Release"
 BuildTest="OFF"
-LibOutputDir="${PROJECT_ROOT_DIR}/lib"
+LibOutputDir="${ProjHome}/lib"
 BuildSharedLibs="OFF"
 CleanFirst="false"
+CleanAll="false"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -33,6 +34,9 @@ while [[ $# -gt 0 ]]; do
         -c|--clean)
             CleanFirst="true"
             ;;
+        -ca|--clean-all)
+            CleanAll="true"
+            ;;
         *)
             echo "Error: Invalid argument '$1'"
             exit 1
@@ -41,11 +45,16 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-if [ ! -d $PROJECT_ROOT_DIR/build ]; then
-    mkdir -p $PROJECT_ROOT_DIR/build
+if [ "$CleanAll" = "true" ] && [ -d "$ProjHome/build" ]; then
+    echo "Cleaning all build files..."
+    rm -rf $ProjHome/build
 fi
 
-cd $PROJECT_ROOT_DIR/build
+if [ ! -d $ProjHome/build ]; then
+    mkdir -p $ProjHome/build
+fi
+
+cd $ProjHome/build
 
 cmake ..  \
     -DCMAKE_BUILD_TYPE=$BuildType \
@@ -60,6 +69,6 @@ else
     cmake --build . --parallel $(nproc)
 fi
 
-cd $PROJECT_ROOT_DIR
+cd $ProjHome
 
 echo "Build finished."

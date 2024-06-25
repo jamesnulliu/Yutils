@@ -1,27 +1,20 @@
-$PROJECT_ROOT_DIR = Get-Location
+$ProjHome = Get-Location
 
 # Default values
 $BuildMode = "Release"
 $BuildTest = "OFF"
-$LibOutputDir = "$PROJECT_ROOT_DIR/lib"
+$LibOutputDir = "$ProjHome/lib"
 $BuildSharedLibs = "OFF"
 $CleanFirst = $false
+$CleanAll = $false
 
 # Parse arguments
 for ($i = 0; $i -lt $args.Count; $i++) {
     switch ($args[$i]) {
-        "Release" {
-            $BuildMode = "Release"
-        }
-        "Debug" {
-            $BuildMode = "Debug"
-        }
-        "-t"{
-            $BuildTest = "ON"
-        }
-        "--test" {
-            $BuildTest = "ON"
-        }
+        "Release" { $BuildMode = "Release" }
+        "Debug" { $BuildMode = "Debug" }
+        "-t"{ $BuildTest = "ON" }
+        "--test" { $BuildTest = "ON" }
         "--libo" {
             $i++
             if ($i -lt $args.Count -and $args[$i]) {
@@ -32,15 +25,11 @@ for ($i = 0; $i -lt $args.Count; $i++) {
                 exit 1
             }
         }
-        "--shared" {
-            $BuildSharedLibs = "ON"
-        }
-        "-c" {
-            $CleanFirst = $true
-        }
-        "--clean-first" {
-            $CleanFirst = $true
-        }
+        "--shared" { $BuildSharedLibs = "ON" }
+        "-c" { $CleanFirst = $true }
+        "--clean" { $CleanFirst = $true }
+        "-ca" { $CleanAll = $true }
+        "--clean-all" { $CleanAll = $true }
         default {
             Write-Host "Error: Invalid argument '$($args[$i])'"
             exit 1
@@ -48,11 +37,15 @@ for ($i = 0; $i -lt $args.Count; $i++) {
     }
 }
 
-if (-not (Test-Path "$PROJECT_ROOT_DIR/build")) {
-    New-Item -ItemType Directory -Path "$PROJECT_ROOT_DIR/build"
+if ($CleanAll -and (Test-Path "$ProjHome/build")) {
+    Write-Host "Cleaning all build files..."
+    Remove-Item "$ProjHome/build" -Recurse -Force
+}
+if (-not (Test-Path "$ProjHome/build")) {
+    New-Item -ItemType Directory -Path "$ProjHome/build"
 }
 
-Set-Location "$PROJECT_ROOT_DIR/build"
+Set-Location "$ProjHome/build"
 
 $CMakeArgs = @(
     "-DCMAKE_BUILD_TYPE=$BuildMode",
@@ -72,6 +65,6 @@ if ($CleanFirst) { $BuildArgs += "--clean-first" }
 
 & cmake --build . $BuildArgs
 
-Set-Location $PROJECT_ROOT_DIR
+Set-Location $ProjHome
 
 Write-Host "Build finished."

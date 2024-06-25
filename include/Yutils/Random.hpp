@@ -12,6 +12,7 @@ namespace yutils
 {
 
 template <class _ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 class RandUniform
 {
 public:
@@ -19,7 +20,7 @@ public:
     RandUniform& operator()(const RandUniform&) = delete;
 
 public:
-    inline _ValTy operator()(double min, double max) const
+    static _ValTy operator()(double min, double max) const
     {
         if (m_distribution == nullptr || m_distribution->min() != min ||
             m_distribution->max() != max) {
@@ -28,12 +29,12 @@ public:
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    inline _ValTy operator()() const
+    static _ValTy operator()() const
     {
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    inline void setParams(double min, double max) const
+    static void setParams(double min, double max) const
     {
         if (m_distribution == nullptr || m_distribution->min() != min ||
             m_distribution->max() != max) {
@@ -41,8 +42,8 @@ public:
         }
     }
 
-    std::vector<_ValTy> generateVec(std::size_t size, double min, double max,
-                                    const std::string& saveLocation = "") const
+    static std::vector<_ValTy> generateVec(std::size_t size, double min, double max,
+                                           const std::string& saveLocation = "") const
     {
         std::vector<_ValTy> vec;
         std::uniform_real_distribution<double> distribution(min, max);
@@ -68,15 +69,19 @@ private:
 };
 
 template <class _ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 std::random_device RandUniform<_ValTy>::_rd{};
 
 template <class _ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 thread_local std::default_random_engine RandUniform<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 std::uniform_real_distribution<double>* RandUniform<_ValTy>::m_distribution{nullptr};
 
 template <class _ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 class RandNormal
 {
 public:
@@ -84,7 +89,7 @@ public:
     RandNormal& operator()(const RandNormal&) = delete;
 
 public:
-    inline _ValTy operator()(double mean, double stddev) const
+    static _ValTy operator()(double mean, double stddev) const
     {
         if (m_distribution == nullptr || m_distribution->mean() != mean ||
             m_distribution->stddev() != stddev) {
@@ -93,13 +98,13 @@ public:
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    inline _ValTy operator()() const
+    static _ValTy operator()() const
     {
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    std::vector<_ValTy> generateVec(std::size_t size, double mean, double stddev,
-                                    const std::string& saveLocation = "") const
+    static std::vector<_ValTy> generateVec(std::size_t size, double mean, double stddev,
+                                           const std::string& saveLocation = "") const
     {
         std::vector<_ValTy> vec;
         std::normal_distribution<double> distribution(mean, stddev);
@@ -125,21 +130,16 @@ private:
 };
 
 template <class _ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 std::random_device RandNormal<_ValTy>::_rd{};
 
 template <class _ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 thread_local std::default_random_engine RandNormal<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 std::normal_distribution<double>* RandNormal<_ValTy>::m_distribution{nullptr};
-
-template <typename T>
-concept _AccToDistributionVisualizer = requires(T lhs, T rhs) {
-    { lhs + rhs };
-    { lhs - rhs };
-    { lhs / 1 * 1 };
-    { std::cout << lhs };
-};
 
 template <class _ValTy>
 class DistributionVisualizer
@@ -152,12 +152,13 @@ public:
     void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
                     const std::size_t maxStarNum = 15) const
     {
-        _INNER_YWARNING("The type of the elements in the vector is not supported by the visualizer.");
+        _INNER_YWARNING(
+            "The type of the elements in the vector is not supported by the visualizer.");
     }
 };
 
 template <class _ValTy>
-    requires _AccToDistributionVisualizer<_ValTy>
+    requires std::is_arithmetic_v<_ValTy>
 class DistributionVisualizer<_ValTy>
 {
 public:
@@ -172,8 +173,8 @@ public:
      * @param binNum The number of bins to divide the range of the random numbers.
      * @param maxStarNum The maximum number of stars to print in each bin.
      */
-    void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
-                    const std::size_t maxStarNum = 15) const
+    static void operator()(const std::vector<_ValTy>& randVec, const std::size_t binNum = 10,
+                           const std::size_t maxStarNum = 15) const
     {
         if (randVec.empty())
             return;
