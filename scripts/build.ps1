@@ -3,9 +3,9 @@ $ProjHome = Get-Location
 # Default values
 $BuildMode = "Release"
 $BuildTest = "OFF"
-$LibOutputDir = "$ProjHome/lib"
+$Prefix = $ProjHome
 $BuildSharedLibs = "OFF"
-$CleanFirst = $false
+$Clean = $false
 $CleanAll = $false
 
 # Parse arguments
@@ -15,19 +15,19 @@ for ($i = 0; $i -lt $args.Count; $i++) {
         "Debug" { $BuildMode = "Debug" }
         "-t"{ $BuildTest = "ON" }
         "--test" { $BuildTest = "ON" }
-        "--libo" {
+        "--prefix" {
             $i++
             if ($i -lt $args.Count -and $args[$i]) {
-                $LibOutputDir = $args[$i]
+                $Prefix = $args[$i]
             }
             else {
-                Write-Host "Error: '--libo' requires a directory path as the next argument."
+                Write-Host "Error: '--prefix' requires a directory path as the next argument."
                 exit 1
             }
         }
         "--shared" { $BuildSharedLibs = "ON" }
-        "-c" { $CleanFirst = $true }
-        "--clean" { $CleanFirst = $true }
+        "-c" { $Clean = $true }
+        "--clean" { $Clean = $true }
         "-ca" { $CleanAll = $true }
         "--clean-all" { $CleanAll = $true }
         default {
@@ -50,7 +50,7 @@ Set-Location "$ProjHome/build"
 $CMakeArgs = @(
     "-DCMAKE_BUILD_TYPE=$BuildMode",
     "-DBUILD_TESTS=$BuildTest",
-    "-DLIB_OUTPUT_DIR=$LibOutputDir",
+    "-DOUTPUT_DIR=$Prefix",
     "-DBUILD_SHARED_LIBS=$BuildSharedLibs",
     "-G=Ninja"
 )
@@ -61,7 +61,7 @@ $BuildArgs = @(
     "--parallel",
     "$env:NUMBER_OF_PROCESSORS"
 )
-if ($CleanFirst) { $BuildArgs += "--clean-first" }
+if ($Clean) { $BuildArgs += "--clean-first" }
 
 & cmake --build . $BuildArgs
 
