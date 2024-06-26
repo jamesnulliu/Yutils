@@ -7,6 +7,16 @@ set(LIB_NAME Yutils)
 # Library version: 1.0
 set(LIB_VERSION 1.0)
 
+# Whether to build Yutils as a shared library
+option(BUILD_SHARED_LIBS "Building using shared libraries." OFF)
+if(BUILD_SHARED_LIBS)
+    message(STATUS "[Yutils] Building as a shared library.")
+else()
+    message(STATUS "[Yutils] Building as a static library."
+            " To build as a shared library, set BUILD_SHARED_LIBS to ON.")
+endif()
+
+# Collect all source files
 file(
     GLOB_RECURSE 
     YUTILS_SRCS 
@@ -34,4 +44,12 @@ set_target_properties(
     LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}/lib
     ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/lib
     RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}/lib
+)
+
+# Copy the include directory to the output directory
+add_custom_command(
+    TARGET ${LIB_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include
+    ${OUTPUT_DIR}/include
 )

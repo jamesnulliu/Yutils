@@ -1,7 +1,7 @@
 $ProjHome = Get-Location
 
 # Default values
-$BuildMode = "Release"
+$BuildType = "Release"
 $BuildTest = "OFF"
 $Prefix = $ProjHome
 $BuildSharedLibs = "OFF"
@@ -10,21 +10,15 @@ $CleanAll = $false
 
 # Parse arguments
 for ($i = 0; $i -lt $args.Count; $i++) {
+    if ($args[$i] -match '^--prefix=(.*)$') {
+        $Prefix = $Matches[1]  # Extracts the part after '='
+        continue
+    }
     switch ($args[$i]) {
-        "Release" { $BuildMode = "Release" }
-        "Debug" { $BuildMode = "Debug" }
+        "Release" { $BuildType = "Release" }
+        "Debug" { $BuildType = "Debug" }
         "-t"{ $BuildTest = "ON" }
         "--test" { $BuildTest = "ON" }
-        "--prefix" {
-            $i++
-            if ($i -lt $args.Count -and $args[$i]) {
-                $Prefix = $args[$i]
-            }
-            else {
-                Write-Host "Error: '--prefix' requires a directory path as the next argument."
-                exit 1
-            }
-        }
         "--shared" { $BuildSharedLibs = "ON" }
         "-c" { $Clean = $true }
         "--clean" { $Clean = $true }
@@ -48,7 +42,7 @@ if (-not (Test-Path "$ProjHome/build")) {
 Set-Location "$ProjHome/build"
 
 $CMakeArgs = @(
-    "-DCMAKE_BUILD_TYPE=$BuildMode",
+    "-DCMAKE_BUILD_TYPE=$BuildType",
     "-DBUILD_TESTS=$BuildTest",
     "-DOUTPUT_DIR=$Prefix",
     "-DBUILD_SHARED_LIBS=$BuildSharedLibs",
@@ -70,14 +64,12 @@ Set-Location $ProjHome
 Write-Host "[Yutils] Build finished."
 
 if ($BuildSharedLibs -eq "ON") {
-    Write-Host "[Yutils|Note] >>>"
+    Write-Host "[Yutils|Note]:" 
     Write-Host "| You have built Yutils as a shared library."
     Write-Host "| If you are using Windows, you may need to:"
     Write-Host "|   - Copy the DLL files to the directory where the executable is located."
     Write-Host "|   OR"
     Write-Host "|   - Add the directory where the DLL files are located to the PATH environment variable."
     Write-Host "| If you are using Linux, you may need to:"
-    Write-Host "|   - Add the directory where the shared library files are located to" `
-               "the LD_LIBRARY_PATH environment variable."
-
+    Write-Host "|   - Add the directory where the shared library files are located to the LD_LIBRARY_PATH environment variable."
 }

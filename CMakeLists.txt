@@ -38,15 +38,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "[Yutils] Build type: ${CMAKE_BUILD_TYPE}")
 
-# Whether to build Yutils as a shared library
-option(BUILD_SHARED_LIBS "Building using shared libraries." OFF)
-if(BUILD_SHARED_LIBS)
-    message(STATUS "[Yutils] Building as a shared library.")
-else()
-    message(STATUS "[Yutils] Building as a static library."
-            " To build as a shared library, set BUILD_SHARED_LIBS to ON.")
-endif()
-
 # Yutils library -----------------------------------------------------------------------------------
 add_subdirectory(src)
 

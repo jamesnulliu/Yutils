@@ -5,9 +5,9 @@ ProjHome=$(pwd)
 # Default values
 BuildType="Release"
 BuildTest="OFF"
-LibOutputDir="${ProjHome}/lib"
+Prefix=$ProjHome
 BuildSharedLibs="OFF"
-CleanFirst="false"
+Clean="false"
 CleanAll="false"
 
 # Parse arguments
@@ -19,20 +19,14 @@ while [[ $# -gt 0 ]]; do
         -t|--test)
             BuildTest="ON"
             ;;
-        --libo)
-            if [[ -n $2 ]]; then
-                LibOutputDir=$2
-                shift
-            else
-                echo "Error: '--libo' requires a directory path as the next argument."
-                exit 1
-            fi
+        --prefix=*)
+            Prefix="${1#*=}"
             ;;
         --shared)
             BuildSharedLibs="ON"
             ;;
         -c|--clean)
-            CleanFirst="true"
+            Clean="true"
             ;;
         -ca|--clean-all)
             CleanAll="true"
@@ -59,11 +53,11 @@ cd $ProjHome/build
 cmake ..  \
     -DCMAKE_BUILD_TYPE=$BuildType \
     -DBUILD_TESTS=$BuildTest  \
-    -DLIB_OUTPUT_DIR=$LibOutputDir  \
+    -DOUTPUT_DIR=$Prefix  \
     -DBUILD_SHARED_LIBS=$BuildSharedLibs \
     -G="Ninja"
 
-if [ "$CleanFirst" = "true" ]; then
+if [ "$Clean" = "true" ]; then
     cmake --build . --parallel $(nproc) --clean-first
 else
     cmake --build . --parallel $(nproc)
@@ -71,4 +65,15 @@ fi
 
 cd $ProjHome
 
-echo "Build finished."
+echo "[Yutils] Build finished."
+
+if [ $BuildSharedLibs = "ON" ]; then
+    echo "[Yutils|Note]:"
+    echo "| You have built Yutils as a shared library."
+    echo "| If you are using Windows, you may need to:"
+    echo "|   - Copy the DLL files to the directory where the executable is located."
+    echo "|   OR"
+    echo "|   - Add the directory where the DLL files are located to the PATH environment variable."
+    echo "| If you are using Linux, you may need to:"
+    echo "|   - Add the directory where the shared library files are located to the LD_LIBRARY_PATH environment variable."
+fi
