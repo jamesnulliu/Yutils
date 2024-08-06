@@ -50,7 +50,7 @@ public:
         std::vector<_ValTy> vec;
         std::uniform_real_distribution<double> distribution(min, max);
         std::ofstream outFile(saveLocation);
-        while (size--) {
+        while ((size--) != 0u) {
             vec.push_back((_ValTy) distribution(m_engine));
             if (outFile.is_open()) {
                 outFile << vec.back() << ",";
@@ -120,7 +120,7 @@ public:
         std::vector<_ValTy> vec;
         std::normal_distribution<double> distribution(mean, stddev);
         std::ofstream outFile(saveLocation);
-        while (size--) {
+        while ((size--) != 0u) {
             vec.push_back(_ValTy(distribution(m_engine)));
             if (outFile.is_open()) {
                 outFile << vec.back() << ",";
@@ -162,8 +162,8 @@ public:
 
 public:
     static void operator()(const std::vector<_ValTy>& randVec,
-                           const std::size_t binNum = 10,
-                           const std::size_t maxStarNum = 15)
+                           const std::size_t kBinNum = 10,
+                           const std::size_t kMaxStarNum = 15)
     {
         _INNER_YWARNING("The type of the elements in the vector is not "
                         "supported by the visualizer.");
@@ -188,12 +188,13 @@ public:
      * @param maxStarNum The maximum number of stars to print in each bin.
      */
     static void operator()(const std::vector<_ValTy>& randVec,
-                           const std::size_t binNum = 10,
-                           const std::size_t maxStarNum = 15,
+                           const std::size_t kBinNum = 10,
+                           const std::size_t kMaxStarNum = 15,
                            std::ostream& os = std::cout)
     {
-        if (randVec.empty())
+        if (randVec.empty()) {
             return;
+        }
         _ValTy minElem = *(std::min_element(randVec.begin(), randVec.end()));
         _ValTy maxElem = *(std::max_element(randVec.begin(), randVec.end()));
         _ValTy range = maxElem - minElem;
@@ -205,21 +206,21 @@ public:
 
         double average = std::accumulate(randVec.begin(), randVec.end(), 0.0) /
                          randVec.size();
-        std::vector<std::size_t> bins(binNum);
+        std::vector<std::size_t> bins(kBinNum);
 
         os << std::format("Min: {} | Max: {} | Average: {}\n", minElem, maxElem,
                           average);
 
         for (const auto& val : randVec) {
             std::size_t bin = static_cast<std::size_t>(double(val - minElem) /
-                                                       range * binNum);
+                                                       range * kBinNum);
             if (bin == bins.size()) {
                 bin -= 1;
             }
             ++bins[bin];
         }
         std::size_t maxS = *(std::max_element(bins.begin(), bins.end()));
-        double resizer = double(maxS) / maxStarNum;
+        double resizer = double(maxS) / kMaxStarNum;
         for (auto& val : bins) {
             val = (std::size_t) ceil(val / resizer);
         }

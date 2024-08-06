@@ -4,7 +4,6 @@
 #include <cassert>
 #include <string_view>
 
-
 namespace yutils
 {
 
@@ -35,9 +34,9 @@ constexpr std::string_view typeName()
 {
 #ifdef __clang__
     std::string_view name = __PRETTY_FUNCTION__;
-    constexpr std::string_view prefix =
+    constexpr std::string_view kPrefix =
         "std::string_view yutils::type_name() [T = ";
-    constexpr std::string_view suffix = "]";
+    constexpr std::string_view kSuffix = "]";
 #elif defined(__GNUC__)
     std::string_view name = __PRETTY_FUNCTION__;
     constexpr std::string_view prefix =
@@ -50,8 +49,8 @@ constexpr std::string_view typeName()
         "> __cdecl yutils::type_name<";
     constexpr std::string_view suffix = ">(void)";
 #endif
-    name.remove_prefix(prefix.size());
-    name.remove_suffix(suffix.size());
+    name.remove_prefix(kPrefix.size());
+    name.remove_suffix(kSuffix.size());
     return name;
 }
 
