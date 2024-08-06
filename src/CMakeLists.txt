@@ -1,42 +1,41 @@
-# Minimum required CMake version
-cmake_minimum_required(VERSION 3.21)
+# ==============================================================================
+# @file src/CMakeLists.txt
+# ==============================================================================
 
-# Library name: Yutils
+# Library name: "Yutils"
 set(LIB_NAME Yutils)
-
 # Library version: 1.0
 set(LIB_VERSION 1.0)
 
-# Whether to build Yutils as a shared library
-option(BUILD_SHARED_LIBS "Building using shared libraries." OFF)
-if(BUILD_SHARED_LIBS)
-    message(STATUS "[Yutils] Building as a shared library.")
-else()
-    message(STATUS "[Yutils] Building as a static library."
-            " To build as a shared library, set BUILD_SHARED_LIBS to ON.")
-endif()
-
 # Collect all source files
-file(
-    GLOB_RECURSE 
-    YUTILS_SRCS 
-    "${CMAKE_CURRENT_SOURCE_DIR}/Yutils/*.cpp"
-)
+file(GLOB_RECURSE YUTILS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-# Create Library
+log_info("Yutils Source Files: [${YUTILS_SRCS}].")
+
+# Create Library Target
 add_library(${LIB_NAME} ${YUTILS_SRCS})
 
-# Add macros for shared library
+# Build Type
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(${LIB_NAME} PRIVATE DEBUG_BUILD)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_definitions(${LIB_NAME} PRIVATE RELEASE_BUILD)
+else()
+    log_fatal("Unsupported Build Type: ${CMAKE_BUILD_TYPE}.")
+endif()
+
+if(BUILD_SHARED_LIBS)
+    log_info("Building a SHARED Library.")
+else()
+    log_info("Building a STATIC Library.")
+endif()
+# Shared or Static Library
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(${LIB_NAME} PRIVATE YUTILS_EXPORT)
 endif()
 
 # Include directories
-target_include_directories(
-    ${LIB_NAME} PRIVATE 
-    ${CMAKE_CURRENT_SOURCE_DIR}/../include
-)
-
+target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 # Set the version of the library and output directories
 set_target_properties(
     ${LIB_NAME} PROPERTIES
@@ -50,6 +49,6 @@ set_target_properties(
 add_custom_command(
     TARGET ${LIB_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_CURRENT_SOURCE_DIR}/../include
+    ${PROJECT_SOURCE_DIR}/include
     ${OUTPUT_DIR}/include
 )

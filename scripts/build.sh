@@ -1,14 +1,17 @@
 #!/bin/bash
 
+echo "](@~@)[ BUILD START ]|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+
 ProjHome=$(pwd)
 
 # Default values
-BuildType="Release"
-BuildTest="OFF"
-Prefix=$ProjHome
-BuildSharedLibs="OFF"
-Clean="false"
-CleanAll="false"
+BuildType="Release"       # Build type: Release or Debug
+BuildExamples="OFF"       # Build examples
+Prefix="$ProjHome/build"  # Output directory
+BuildSharedLibs="OFF"     # Build shared libraries
+CleanFirst="false"        # Clean first before build
+CleanAll="false"          # Remove all build files
+NotBuild="false"          # Only generate build files, not build
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -16,8 +19,11 @@ while [[ $# -gt 0 ]]; do
         Release|Debug)
             BuildType=$1
             ;;
-        -t|--test)
-            BuildTest="ON"
+        -nb|--not-build)
+            NotBuild="true"
+            ;;
+        -be|--build-example)
+            BuildExamples="ON"
             ;;
         --prefix=*)
             Prefix="${1#*=}"
@@ -25,7 +31,7 @@ while [[ $# -gt 0 ]]; do
         --shared)
             BuildSharedLibs="ON"
             ;;
-        -c|--clean)
+        -cf|--clean-first)
             Clean="true"
             ;;
         -ca|--clean-all)
@@ -40,7 +46,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ "$CleanAll" = "true" ] && [ -d "$ProjHome/build" ]; then
-    echo "Cleaning all build files..."
+    echo "[build.sh] Removing all build files..."
     rm -rf $ProjHome/build
 fi
 
@@ -52,23 +58,25 @@ cd $ProjHome/build
 
 cmake ..  \
     -DCMAKE_BUILD_TYPE=$BuildType \
-    -DBUILD_TESTS=$BuildTest  \
+    -DBUILD_EXAMPLES=$BuildExamples  \
     -DOUTPUT_DIR=$Prefix  \
     -DBUILD_SHARED_LIBS=$BuildSharedLibs \
     -G="Ninja"
 
-if [ "$Clean" = "true" ]; then
-    cmake --build . --parallel $(nproc) --clean-first
-else
-    cmake --build . --parallel $(nproc)
+if [ "$NotBuild" = "false" ]; then
+    if [ "$CleanFirst" = "true" ]; then
+        cmake --build . --parallel $(nproc) --clean-first
+    else
+        cmake --build . --parallel $(nproc)
+    fi
 fi
 
 cd $ProjHome
 
-echo "[Yutils] Build finished."
+echo "](OvO)[ BUILD FINISHED ]||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 
 if [ $BuildSharedLibs = "ON" ]; then
-    echo "[Yutils|Note]:"
+    echo "[build.sh] Note:"
     echo "| You have built Yutils as a shared library."
     echo "| If you are using Windows, you may need to:"
     echo "|   - Copy the DLL files to the directory where the executable is located."

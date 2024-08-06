@@ -1,7 +1,6 @@
 #pragma once
 #include <chrono>
 #include <numeric>
-#include <string>
 #include <vector>
 
 namespace yutils
@@ -49,20 +48,25 @@ public:
     // Return average duration in millisecond.
     int64_t msecond()
     {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(calAverage()).count();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+                   calAverage())
+            .count();
     }
 
     // Return average duration in second.
     double second()
     {
-        return std::chrono::duration_cast<std::chrono::duration<double>>(calAverage()).count();
+        return std::chrono::duration_cast<std::chrono::duration<double>>(
+                   calAverage())
+            .count();
     }
 
 private:
     std::chrono::high_resolution_clock::duration calAverage()
     {
-        auto sum = std::accumulate(resultList.begin(), resultList.end(),
-                                   std::chrono::high_resolution_clock::duration::zero());
+        auto sum = std::accumulate(
+            resultList.begin(), resultList.end(),
+            std::chrono::high_resolution_clock::duration::zero());
         return sum / resultList.size();
     }
 
