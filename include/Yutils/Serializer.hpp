@@ -2,8 +2,11 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <cstring>
 #include <format>
+#include <ranges>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <vector>

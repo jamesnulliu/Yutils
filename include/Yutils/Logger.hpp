@@ -27,11 +27,11 @@
  * You can also change the log format by defining `_HOW_YTRACE`, `_HOW_YINFO`,
  * `_HOW_YWARNING`, `_HOW_YERROR`, `_HOW_YCRITICAL` before including this file.
  */
-
 #pragma once
+#include <format>
+
 #include "Yutils/Color.hpp"
 #include "Yutils/Common.hpp"
-#include <format>
 
 #ifndef YLOG_LEVEL
     #define YLOG_LEVEL 5

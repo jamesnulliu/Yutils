@@ -1,4 +1,7 @@
 Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: Strict
+
   ClangTidy:
     Add: [
       performance-*,
@@ -32,3 +35,4 @@ Diagnostics:
       modernize-use-nodiscard,
       modernize-avoid-c-arrays
     ]
+

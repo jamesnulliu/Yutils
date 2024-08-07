@@ -1,9 +1,9 @@
 #pragma once
+#include <format>
+#include <iostream>
 
 #include "Yutils/Color.hpp"
 #include "Yutils/Common.hpp"
-#include <format>
-#include <iostream>
 
 #ifndef _INNER_YLOG_LEVEL
     #define _INNER_YLOG_LEVEL 5

@@ -29,7 +29,6 @@
 #define YUTILS_COLOR_FUNC_RESET "\033[0m"
 
 #define YUTILS_COLOR_FUNC_GEN_1(attr1) "\033[" attr1 "m"
-#define YUTILS_COLOR_FUNC_GEN_2(attr1, attr2)                                       \
-    "\033[" attr1 ";" attr2 "m"
-#define YUTILS_COLOR_FUNC_GEN_3(attr1, attr2, attr3)                                \
+#define YUTILS_COLOR_FUNC_GEN_2(attr1, attr2) "\033[" attr1 ";" attr2 "m"
+#define YUTILS_COLOR_FUNC_GEN_3(attr1, attr2, attr3)                           \
     "\033[" attr1 ";" attr2 ";" attr3 "m"

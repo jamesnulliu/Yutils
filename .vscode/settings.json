@@ -1,0 +1,22 @@
+{
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.intelliSenseEngineFallback": "Disabled",
+    "C_Cpp.intelliSenseEngine": "Disabled",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build",
+        "--log=verbose",
+        "--pretty",
+        "--clang-tidy",
+        "--all-scopes-completion",
+        "--completion-style=bundled",
+        "--cross-file-rename",
+        "--header-insertion=iwyu",
+        "--header-insertion-decorators",
+        "--background-index",
+        // "-j=6",
+        "--pch-storage=memroy",
+        "--function-arg-placeholders=false",
+    ],
+}
