@@ -7,15 +7,15 @@
 #include <memory>
 #include <numeric>
 #include <random>
+#include <type_traits>
 #include <vector>
+#include <spdlog/spdlog.h>
 
-#include <Yutils/_InnerLogger.hpp>
 
 namespace yutils
 {
 
 template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
 class RandUniform
 {
 public:
@@ -73,20 +73,16 @@ private:
 };
 
 template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
 std::random_device RandUniform<_ValTy>::_rd{};
 
 template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
 thread_local std::default_random_engine RandUniform<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
 std::shared_ptr<std::uniform_real_distribution<double>>
     RandUniform<_ValTy>::m_distribution{};
 
 template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
 class RandNormal
 {
 public:
@@ -142,38 +138,17 @@ private:
 };
 
 template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
 std::random_device RandNormal<_ValTy>::_rd{};
 
 template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
 thread_local std::default_random_engine RandNormal<_ValTy>::m_engine{_rd()};
 
 template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
 std::shared_ptr<std::normal_distribution<double>>
     RandNormal<_ValTy>::m_distribution{nullptr};
 
 template <class _ValTy>
 class DistributionVisualizer
-{
-public:
-    explicit DistributionVisualizer() = default;
-    DistributionVisualizer& operator=(const DistributionVisualizer&) = delete;
-
-public:
-    static void operator()(const std::vector<_ValTy>& randVec,
-                           const std::size_t kBinNum = 10,
-                           const std::size_t kMaxStarNum = 15)
-    {
-        _INNER_YWARNING("The type of the elements in the vector is not "
-                        "supported by the visualizer.");
-    }
-};
-
-template <class _ValTy>
-    requires std::is_arithmetic_v<_ValTy>
-class DistributionVisualizer<_ValTy>
 {
 public:
     explicit DistributionVisualizer() = default;
@@ -193,47 +168,55 @@ public:
                            const std::size_t kMaxStarNum = 15,
                            std::ostream& os = std::cout)
     {
-        if (randVec.empty()) {
-            return;
-        }
-        _ValTy minElem = *(std::min_element(randVec.begin(), randVec.end()));
-        _ValTy maxElem = *(std::max_element(randVec.begin(), randVec.end()));
-        _ValTy range = maxElem - minElem;
-
-        if (range == 0) {
-            os << std::format("All the elements are: {}\n", maxElem);
-            return;
-        }
-
-        double average = std::accumulate(randVec.begin(), randVec.end(), 0.0) /
-                         randVec.size();
-        std::vector<std::size_t> bins(kBinNum);
-
-        os << std::format("Min: {} | Max: {} | Average: {}\n", minElem, maxElem,
-                          average);
-
-        for (const auto& val : randVec) {
-            std::size_t bin = static_cast<std::size_t>(double(val - minElem) /
-                                                       range * kBinNum);
-            if (bin == bins.size()) {
-                bin -= 1;
+        if constexpr (!std::is_arithmetic_v<_ValTy>) {
+            spdlog::warn("The type of the elements in the vector is not "
+                         "supported by the visualizer.");
+        } else {
+            if (randVec.empty()) {
+                return;
             }
-            ++bins[bin];
-        }
-        std::size_t maxS = *(std::max_element(bins.begin(), bins.end()));
-        double resizer = double(maxS) / kMaxStarNum;
-        for (auto& val : bins) {
-            val = (std::size_t) ceil(val / resizer);
-        }
-        for (std::size_t i = 0; i < bins.size(); ++i) {
-            os << std::format("{:>3}: ", i);
-            for (std::size_t j = 0; j < bins[i]; ++j) {
-                os << "*";
-            }
-            os << "\n";
-        }
+            _ValTy minElem =
+                *(std::min_element(randVec.begin(), randVec.end()));
+            _ValTy maxElem =
+                *(std::max_element(randVec.begin(), randVec.end()));
+            _ValTy range = maxElem - minElem;
 
-        os << std::flush;
+            if (range == 0) {
+                os << std::format("All the elements are: {}\n", maxElem);
+                return;
+            }
+
+            double average =
+                std::accumulate(randVec.begin(), randVec.end(), 0.0) /
+                randVec.size();
+            std::vector<std::size_t> bins(kBinNum);
+
+            os << std::format("Min: {} | Max: {} | Average: {}\n", minElem,
+                              maxElem, average);
+
+            for (const auto& val : randVec) {
+                auto bin = static_cast<std::size_t>(double(val - minElem) /
+                                                    range * kBinNum);
+                if (bin == bins.size()) {
+                    bin -= 1;
+                }
+                ++bins[bin];
+            }
+            std::size_t maxS = *(std::max_element(bins.begin(), bins.end()));
+            double resizer = double(maxS) / kMaxStarNum;
+            for (auto& val : bins) {
+                val = (std::size_t) ceil(val / resizer);
+            }
+            for (std::size_t i = 0; i < bins.size(); ++i) {
+                os << std::format("{:>3}: ", i);
+                for (std::size_t j = 0; j < bins[i]; ++j) {
+                    os << "*";
+                }
+                os << "\n";
+            }
+
+            os << std::flush;
+        }
     }
 };
 

@@ -5,6 +5,7 @@
 #include <cstring>
 #include <format>
 #include <ranges>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -83,10 +84,10 @@ public:
         // ELIF: Scalar type or std containers with stack-allocated memory
         else if constexpr (std::is_trivially_copyable_v<ObjT>) {
             if (rawData.size() != sizeof(ObjT)) {
-                throw std::runtime_error(
-                    std::format("Size of data ({}B) does not match the size of "
-                                "the object ({}B) to be deserialized.",
-                                rawData.size(), sizeof(ObjT)));
+                throw std::runtime_error(spdlog::fmt_lib::format(
+                    "Size of data ({}B) does not match the size of "
+                    "the object ({}B) to be deserialized.",
+                    rawData.size(), sizeof(ObjT)));
             }
             ObjT result;
             std::memcpy(&result, rawData.data(), sizeof(ObjT));
@@ -95,7 +96,7 @@ public:
         // ELIF: Std containers with heap-allocated memory
         else if constexpr (std::ranges::range<ObjT>) {
             if (rawData.size() % sizeof(typename ObjT::value_type) != 0) {
-                throw std::runtime_error(std::format(
+                throw std::runtime_error(spdlog::fmt_lib::format(
                     "Size of data ({}B) is not a multiple of the size "
                     "of the object ({}B) to be deserialized.",
                     rawData.size(), sizeof(typename ObjT::value_type)));
@@ -157,7 +158,7 @@ public:
             std::stringstream ss(rawData);
             ss >> result;
             if (ss.fail()) {
-                throw std::runtime_error(std::format(
+                throw std::runtime_error(spdlog::fmt_lib::format(
                     "Failed when converting rawData to original Type: {}.",
                     typeName<ObjT>()));
             }

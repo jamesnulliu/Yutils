@@ -1,12 +1,12 @@
 #pragma once
 #include <optional>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <string_view>
 #include <unordered_map>
 
 #include "Yutils/Serializer.hpp"
 #include "Yutils/System.hpp"
-#include "Yutils/_InnerLogger.hpp"
 
 namespace yutils
 {
@@ -52,17 +52,15 @@ public:
      *
      * @tparam T The type of the option.
      * @param optName The name of the option.
-     * @return std::optional<T> The value of the option. If the option is not
-     *         parsed and no default value provided, return `std::nullopt`.
      */
     template <typename T>
-    std::optional<T> get(std::string optName) const
+    T get(std::string optName) const
     {
         auto it = m_options.find(optName);
         // Throw an exception if the option is not added.
         // User should not `get` an option before adding it with `addOption`.
         if (it == m_options.end()) {
-            _INNER_YERROR("Option \"{}\" not added. Call "
+            spdlog::error("Option \"{}\" not added. Call "
                           "`ArgParser::addOption` before getting the value.",
                           optName);
             throw std::runtime_error("Option not added.");
@@ -70,10 +68,10 @@ public:
         // Return `std::nullopt` if the option is not parsed and no default
         // value provided.
         if (it->second.strVal == std::nullopt) {
-            _INNER_YERROR(
+            spdlog::error(
                 "Option \"{}\" not parsed and no default value provided.",
                 optName);
-            return std::nullopt;
+            throw std::runtime_error("Option not parsed.");
         }
         // Deserialize the string value to the supposed type.
         // This function may throw a runtime error if the conversion fails.

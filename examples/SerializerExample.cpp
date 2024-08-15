@@ -1,8 +1,8 @@
-#include "Yutils/Logger.hpp"
-#include "Yutils/Serializer.hpp"
 #include <cstdio>
 #include <string>
 #include <vector>
+#include <spdlog/spdlog.h>
+#include <Yutils/Serializer.hpp>
 
 using namespace yutils;
 
@@ -11,7 +11,7 @@ using namespace yutils;
 // -----------------------------------------------------------------------------
 void test_bytesSerialization()
 {
-    YINFO("\n{:=<80}", ":) Bytes serialization for std::vector<double, 5> ");
+    spdlog::info("\n{:=<80}", ":) Bytes serialization for std::vector<double, 5> ");
 
     std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0};
 
@@ -27,7 +27,7 @@ void test_bytesSerialization()
     for (const auto& byte : serialized) {
         bytesStr += std::format("{:02X} ", static_cast<int>(byte));
     }
-    YTRACE("Serialized: {}", bytesStr);
+    spdlog::trace("Serialized: {}", bytesStr);
     // To deserialize objects from type `RawT`, you need to use function
     // `deserialize` provided by class `yutils::Serializer<RawT>`.
     // In the following example, we deserialize `serialized` (which is a
@@ -39,7 +39,7 @@ void test_bytesSerialization()
     for (const auto& val : deserialized) {
         doubleStr += std::format("{:.1f} ", val);
     }
-    YTRACE("Deserialized: {}", doubleStr);
+    spdlog::trace("Deserialized: {}", doubleStr);
     std::puts("");
 }
 // =============================================================================
@@ -71,12 +71,12 @@ User Serializer<std::string>::deserializeImpl(const std::string& rawData)
 
 void test_serializeUser2String()
 {
-    YINFO("\n{:=<80}", ":) String serialization for struct User ");
+    spdlog::info("\n{:=<80}", ":) String serialization for struct User ");
     User user = {"Tom", 18};
     auto serialized = Serializer<std::string>::serialize(user);
-    YTRACE("Serialized: {}", serialized);
+    spdlog::trace("Serialized: {}", serialized);
     User deserialized = Serializer<std::string>::deserialize<User>(serialized);
-    YTRACE("Deserialized: name={}, age={}", deserialized.name,
+    spdlog::trace("Deserialized: name={}, age={}", deserialized.name,
            deserialized.age);
     std::puts("");
 }
@@ -147,17 +147,17 @@ User Serializer<std::vector<int>>::deserializeImpl(const RawT& object)
 
 void test_serializeUser2VectorInt()
 {
-    YINFO("\n{:=<80}", ":) std::vector<int> serialization for struct User ");
+    spdlog::info("\n{:=<80}", ":) std::vector<int> serialization for struct User ");
     User user = {"Tom", 18};
     auto serialized = Serializer<std::vector<int>>::serialize(user);
     std::string intStr;
     for (const auto& byte : serialized) {
         intStr += std::format("{:08} ", byte);
     }
-    YTRACE("Serialized: {}", intStr);
+    spdlog::trace("Serialized: {}", intStr);
     User deserialized =
         Serializer<std::vector<int>>::deserialize<User>(serialized);
-    YTRACE("Deserialized: name={}, age={}", deserialized.name,
+    spdlog::trace("Deserialized: name={}, age={}", deserialized.name,
            deserialized.age);
     std::puts("");
 }

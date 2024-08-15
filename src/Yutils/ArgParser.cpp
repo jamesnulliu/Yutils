@@ -1,7 +1,9 @@
 #include "Yutils/ArgParser.hpp"
 #include "Yutils/Common.hpp"
-#include "Yutils/Logger.hpp"
 #include <format>
+#include <spdlog/common.h>
+#include <spdlog/fmt/bundled/core.h>
+#include <spdlog/spdlog.h>
 
 namespace yutils
 {
@@ -19,32 +21,34 @@ void ArgParser::addOption(const std::string& optName, const std::string& type,
                           std::optional<std::string> defaultValue)
 {
     if (optName == "--help") {
-        _INNER_YWARNING("Skip adding option: Option name \"--help\" is "
-                        "reserved for help message.");
+        spdlog::warn("Skip adding option: Option name \"--help\" is "
+                     "reserved for help message.");
         return;
     }
     // Check if the option name is valid.
     if (optName.empty() || !optName.starts_with('-')) {
-        _INNER_YWARNING("Skip adding option: Invalid option name: \"{}\"; "
-                        "Option name must start with '-'.",
-                        optName);
+        spdlog::warn("Skip adding option: Invalid option name: \"{}\"; "
+                     "Option name must start with '-'.",
+                     optName);
         return;
     }
     // Check if the option already exists.
     if (m_options.find(std::string(optName)) != m_options.end()) {
-        _INNER_YWARNING("Skip adding option: Option \"{}\" already exists.",
-                        optName);
+        spdlog::warn("Skip adding option: Option \"{}\" already exists.",
+                     optName);
         return;
     }
     if (type == "ArgParser::flag_t") {
         defaultValue = "false";
-        m_helpMessage += std::format(
+        m_helpMessage += spdlog::fmt_lib::format(
             "  {:<20} {:<20} {:<20} \"{}\"\n", optName, type,
-            std::format("[{}]", defaultValue.value_or("")), description);
+            spdlog::fmt_lib::format("[{}]", defaultValue.value_or("")),
+            description);
     } else {
-        m_helpMessage += std::format(
+        m_helpMessage += spdlog::fmt_lib::format(
             "  {:<20} {:<20} {:<20} \"{}\"\n", optName + " <value>", type,
-            std::format("[{}]", defaultValue.value_or("")), description);
+            spdlog::fmt_lib::format("[{}]", defaultValue.value_or("")),
+            description);
     }
     // Add the option to the map.
     m_options[optName] = {description, type, defaultValue};
@@ -74,11 +78,11 @@ bool ArgParser::parse(int argc, char* argv[]) noexcept
                 it->second.strVal = argv[i + 1];
                 ++i;
             } else {
-                _INNER_YERROR("Option \"{}\" requires a value", arg);
+                spdlog::error("Option \"{}\" requires a value", arg);
                 return false;
             }
         } else {
-            _INNER_YERROR("Unknown option: \"{}\"", arg);
+            spdlog::error("Unknown option: \"{}\"", arg);
             return false;
         }
     }
