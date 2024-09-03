@@ -37,6 +37,9 @@ public:
 template <typename RawT>
 class Serializer;
 
+/**
+ * @brief Object <-> std::vector<std::byte>.
+ */
 template <>
 class Serializer<std::vector<std::byte>>
     : public BaseSerializer<Serializer<std::vector<std::byte>>>
@@ -81,7 +84,7 @@ public:
         if constexpr (std::is_same_v<ObjT, std::vector<std::byte>>) {
             return rawData;
         }
-        // ELIF: Scalar type or std containers with stack-allocated memory
+        // ELIF: Scalar type or containers with stack-allocated memory
         else if constexpr (std::is_trivially_copyable_v<ObjT>) {
             if (rawData.size() != sizeof(ObjT)) {
                 throw std::runtime_error(spdlog::fmt_lib::format(
@@ -93,8 +96,8 @@ public:
             std::memcpy(&result, rawData.data(), sizeof(ObjT));
             return result;
         }
-        // ELIF: Std containers with heap-allocated memory
-        else if constexpr (std::ranges::range<ObjT>) {
+        // ELIF: Containers with heap-allocated memory
+        else if constexpr (yutils::IsRange<ObjT>::value) {
             if (rawData.size() % sizeof(typename ObjT::value_type) != 0) {
                 throw std::runtime_error(spdlog::fmt_lib::format(
                     "Size of data ({}B) is not a multiple of the size "
@@ -113,7 +116,7 @@ public:
 };
 
 /**
- * @brief Serialize object to std::string.
+ * @brief Object <-> std::string.
  */
 template <>
 class Serializer<std::string> : public BaseSerializer<Serializer<std::string>>

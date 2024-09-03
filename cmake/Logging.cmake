@@ -1,7 +1,7 @@
 string(ASCII 27 Esc)
 set(CYAN_CAT "${Esc}[0;36mᓚᘏᗢ${Esc}[m")
 
-set(LOG_PREFIX "♪|Yutils")
+set(LOG_PREFIX "Yutils♪")
 
 function(log_info msg)
     message(STATUS "[${LOG_PREFIX}|INFO] >>> ${msg}")

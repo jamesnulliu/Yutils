@@ -5,7 +5,7 @@ fi
 
 cmake -G Ninja -S . -B ./build \
     -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_SHARED_LIBS=OFF \
     -DYUTILS_BUILD_EXAMPLES=ON \
     -DSPDLOG_HOME=$SPDLOG_HOME
 
