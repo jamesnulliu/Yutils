@@ -66,7 +66,7 @@ public:
             return data;
         }
         // ELIF: Std containers with heap-allocated memory
-        else if constexpr (std::ranges::range<ObjT>) {
+        else if constexpr (yutils::IsRange<ObjT>::value) {
             RawT data(sizeof(typename ObjT::value_type) * object.size());
             std::memcpy(data.data(), object.data(), data.size());
             return data;

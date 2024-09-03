@@ -6,14 +6,22 @@
     #if defined(_MSC_VER)  // MSVC
         #if _HAS_CXX23     // C++23
             #define YUTILS_CXX_VERSION 23
-        #else  // Other versions
-static_assert(false, "C++23 is required");
+        #elif _HAS_CXX20  // C++20
+            #define YUTILS_CXX_VERSION 20
+        #elif _HAS_CXX17  // C++17
+            #define YUTILS_CXX_VERSION 17
+        #else
+static_assert(false, "Unsupported C++ version");
         #endif
     #else                           // GCC or Clang
         #if __cplusplus >= 202300L  // C++23
             #define YUTILS_CXX_VERSION 23
-        #else  // Other versions
-static_assert(false, "C++23 is required");
+        #elif __cplusplus >= 202002L  // C++20
+            #define YUTILS_CXX_VERSION 20
+        #elif __cplusplus >= 201703L  // C++17
+            #define YUTILS_CXX_VERSION 17
+        #else
+static_assert(false, "Unsupported C++ version");
         #endif
     #endif
 #endif

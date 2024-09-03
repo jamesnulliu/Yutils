@@ -43,4 +43,4 @@ results/*
 .cache/*
 
 # Default Install Directory
-Yutils
+/Yutils
