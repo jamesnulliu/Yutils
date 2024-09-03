@@ -5,13 +5,23 @@
 ### spdlog
 
 ```bash
-git clone https://github.com/gabime/spdlog.git 
-cd ./spdlog
-cmake -S . -B ./build -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DSPDLOG_BUILD_SHARED=ON
-cmake --build ./build
-cmake --install ./build --prefix ./spdlog
+# Clone the spdlog project
+export SPDLOG_PROJECT_DIR="/path/to/spdlog"
+git clone https://github.com/gabime/spdlog.git  "${SPDLOG_PROJECT_DIR}"
 
-export SPDLOG_DIR=$(pwd)/spdlog
+export SPDLOG_HOME="${SPDLOG_PROJECT_DIR}/spdlog"
+
+bash ./scripts/install-spdlog.sh Release --std-format --shared
+```
+
+## Build
+
+```bash
+bash scripts/build-yutils.sh
+```
+
+## Install
+
+```bash
+bash scripts/install-yutils.sh
 ```

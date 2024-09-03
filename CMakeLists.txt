@@ -2,26 +2,25 @@
 cmake_minimum_required(VERSION 3.21)
 
 # Project name
-project(Yutils)
+project(Yutils VERSION 1.1.0)
 
 # Some Logger functions --------------------------------------------------------
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Logger.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/Logging.cmake)
 
 # Arguments --------------------------------------------------------------------
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Arguments.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/Arguments.cmake)
 
 # Compiler and Linker Configurations -------------------------------------------
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Compiler.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/Compiler.cmake)
 
-# Shared or Static Library -----------------------------------------------------
-option(BUILD_SHARED_LIBS "Building a shared library." OFF)
+# Library Install Utilities ----------------------------------------------------
+include(${CMAKE_SOURCE_DIR}/cmake/InstallLibraries.cmake)
 
 # Yutils library ---------------------------------------------------------------
 add_subdirectory(src)
 
 # Examples ---------------------------------------------------------------------
 if(YUTILS_BUILD_EXAMPLES)
-    log_info("Building Examples.")
     add_subdirectory(examples)
 endif()
 

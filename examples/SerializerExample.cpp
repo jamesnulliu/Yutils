@@ -165,6 +165,7 @@ void test_serializeUser2VectorInt()
 
 int main()
 {
+    spdlog::set_level(spdlog::level::trace);
     test_bytesSerialization();
     test_serializeUser2String();
     test_serializeUser2VectorInt();

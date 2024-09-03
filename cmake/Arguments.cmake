@@ -17,23 +17,23 @@ endif()
 log_info("Build Type: ${CMAKE_BUILD_TYPE}")
 
 # Shared or Static Library -----------------------------------------------------
-option(BUILD_SHARED_LIBS "Building shared library." OFF)
-log_info("Building shared library: ${BUILD_SHARED_LIBS}")
+option(BUILD_SHARED_LIBS "Build shared library." OFF)
+log_info("Build shared library: ${BUILD_SHARED_LIBS}")
 
 # Build Examples ---------------------------------------------------------------
 option(YUTILS_BUILD_EXAMPLES "Whether to build the examples" ON)
-log_info("Building Examples: ${YUTILS_BUILD_EXAMPLES}")
+log_info("Build Examples: ${YUTILS_BUILD_EXAMPLES}")
 
 # Spdlog install directory -----------------------------------------------------
-if(NOT SPDLOG_DIR)
+if(NOT SPDLOG_HOME)
     # Try use environment variable
-    if (DEFINED ENV{SPDLOG_HOME})
-        set(SPDLOG_DIR $ENV{SPDLOG_HOME})
+    if (DEFINED $ENV{SPDLOG_HOME})
+        set(SPDLOG_HOME $ENV{SPDLOG_HOME})
     else()
-        log_fatal("SPDLOG_DIR is not set.")
+        log_fatal("SPDLOG_HOME is not set.")
     endif()
 endif()
-log_info("SPDLOG_DIR: ${SPDLOG_DIR}")
+log_info("SPDLOG_HOME: ${SPDLOG_HOME}")
 
 
 

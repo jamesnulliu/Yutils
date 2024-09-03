@@ -2,7 +2,6 @@
 #include "Yutils/Common.hpp"
 #include <format>
 #include <spdlog/common.h>
-#include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
 
 namespace yutils
