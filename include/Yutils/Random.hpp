@@ -7,10 +7,10 @@
 #include <memory>
 #include <numeric>
 #include <random>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 #include <type_traits>
 #include <vector>
-#include <spdlog/spdlog.h>
-
 
 namespace yutils
 {
@@ -163,14 +163,16 @@ public:
      * numbers.
      * @param maxStarNum The maximum number of stars to print in each bin.
      */
-    static void operator()(const std::vector<_ValTy>& randVec,
-                           const std::size_t kBinNum = 10,
-                           const std::size_t kMaxStarNum = 15,
-                           std::ostream& os = std::cout)
+    void operator()(const std::vector<_ValTy>& randVec,
+                    const std::size_t kBinNum = 10,
+                    const std::size_t kMaxStarNum = 15,
+                    std::ostream& os = std::cout)
     {
+
+        m_logger->critical("I am here!!");
         if constexpr (!std::is_arithmetic_v<_ValTy>) {
-            spdlog::warn("The type of the elements in the vector is not "
-                         "supported by the visualizer.");
+            m_logger->warn("The type of the elements in the vector is not "
+                           "supported by the visualizer.");
         } else {
             if (randVec.empty()) {
                 return;
@@ -182,9 +184,12 @@ public:
             _ValTy range = maxElem - minElem;
 
             if (range == 0) {
-                os << std::format("All the elements are: {}\n", maxElem);
+                os << spdlog::fmt_lib::format("All the elements are: {}\n",
+                                              maxElem);
                 return;
             }
+
+            m_logger->info("Min: {} | Max: {}", minElem, maxElem);
 
             double average =
                 std::accumulate(randVec.begin(), randVec.end(), 0.0) /
@@ -208,7 +213,7 @@ public:
                 val = (std::size_t) ceil(val / resizer);
             }
             for (std::size_t i = 0; i < bins.size(); ++i) {
-                os << std::format("{:>3}: ", i);
+                os << spdlog::fmt_lib::format("{:>3}: ", i);
                 for (std::size_t j = 0; j < bins[i]; ++j) {
                     os << "*";
                 }
@@ -218,6 +223,10 @@ public:
             os << std::flush;
         }
     }
+
+private:
+    std::shared_ptr<spdlog::logger> m_logger =
+        spdlog::stdout_color_mt("yutils::DistributionVisualizer");
 };
 
 }  // namespace yutils

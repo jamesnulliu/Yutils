@@ -11,7 +11,7 @@ git clone https://github.com/gabime/spdlog.git  "${SPDLOG_PROJECT_DIR}"
 
 export SPDLOG_HOME="${SPDLOG_PROJECT_DIR}/spdlog"
 
-bash ./scripts/install-spdlog.sh Release --std-format --shared
+bash ./scripts/install-spdlog.sh Release --std-format
 ```
 
 ## Build

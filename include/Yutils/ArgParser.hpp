@@ -60,18 +60,17 @@ public:
         // Throw an exception if the option is not added.
         // User should not `get` an option before adding it with `addOption`.
         if (it == m_options.end()) {
-            spdlog::error("Option \"{}\" not added. Call "
-                          "`ArgParser::addOption` before getting the value.",
-                          optName);
-            throw std::runtime_error("Option not added.");
+            throw std::runtime_error(spdlog::fmt_lib::format(
+                "Option \"{}\" not added. Call "
+                "`ArgParser::addOption` before getting the value.",
+                optName));
         }
         // Return `std::nullopt` if the option is not parsed and no default
         // value provided.
         if (it->second.strVal == std::nullopt) {
-            spdlog::error(
+            throw std::runtime_error(spdlog::fmt_lib::format(
                 "Option \"{}\" not parsed and no default value provided.",
-                optName);
-            throw std::runtime_error("Option not parsed.");
+                optName));
         }
         // Deserialize the string value to the supposed type.
         // This function may throw a runtime error if the conversion fails.
@@ -93,5 +92,6 @@ private:
     };
     std::unordered_map<std::string, Option> m_options;
     std::string m_helpMessage;
+    std::shared_ptr<spdlog::logger> m_logger;
 };
 }  // namespace yutils

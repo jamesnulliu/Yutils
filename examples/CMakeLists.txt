@@ -27,3 +27,10 @@ add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
 set(EXAMPLE_NAME SimpleCSVExample)
 add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
 # ==============================================================================
+
+# ==============================================================================
+# Random Example
+# ------------------------------------------------------------------------------
+set(EXAMPLE_NAME RandomExample)
+add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
+# ==============================================================================

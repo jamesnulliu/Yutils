@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <cstring>
 #include <format>
-#include <ranges>
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <stdexcept>
@@ -153,7 +152,7 @@ public:
             return rawData;
         } else if constexpr (std::is_same_v<ObjT, bool>) {
             auto falseFlag = {"false", "0", "False", "FALSE"};
-            return std::ranges::find(falseFlag, rawData) == falseFlag.end();
+            return std::find(falseFlag.begin(), falseFlag.end(), rawData) == falseFlag.end();
         } else if constexpr (std::is_enum_v<ObjT>) {
             return static_cast<ObjT>(std::stoi(rawData));
         } else {
