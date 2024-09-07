@@ -1,50 +1,62 @@
+#include <memory>
+#include <spdlog/common.h>
+#include <spdlog/logger.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+
 #include "Yutils/ArgParser.hpp"
 #include "Yutils/Common.hpp"
-#include "Yutils/Logger.hpp"
-#include <format>
 
 namespace yutils
 {
 ArgParser::ArgParser(std::string_view argv0)
 {
-    m_options["--help"] = {"Show help messages.", "flag_t", "false"};
-    m_helpMessage = std::format("Usage:\n    {} [options]\nOptions:\n",
-                                extractFilename(argv0));
-    m_helpMessage += std::format("  {:<20} {:<20} {:<20} \"{}\"\n", "--help",
-                                 "flag_t", "[false]", "Show help messages.");
+    m_logger = spdlog::stdout_color_mt("yutils::ArgParser");
+
+    // Add the executable name to the help message.
+    m_options["--help"] = {"Show help messages.", "yutils::flag_t", "false"};
+    m_helpMessage = spdlog::fmt_lib::format(
+        "Usage:\n    {} [options]\nOptions:\n", extractFilename(argv0));
+    m_helpMessage += spdlog::fmt_lib::format(
+        "  Arg: {}\n  |- Type: {}\n  |- Default: {}\n  |- Description: "
+        "{}\n",
+        "--help", "flag_t", "false", "Show help messages.");
 };
 
 void ArgParser::addOption(const std::string& optName, const std::string& type,
                           const std::string& description,
                           std::optional<std::string> defaultValue)
 {
+    using spdlog::fmt_lib::format;
     if (optName == "--help") {
-        _INNER_YWARNING("Skip adding option: Option name \"--help\" is "
-                        "reserved for help message.");
+        m_logger->warn("Skip adding option: Option name \"--help\" is "
+                       "reserved for help message.");
         return;
     }
     // Check if the option name is valid.
     if (optName.empty() || !optName.starts_with('-')) {
-        _INNER_YWARNING("Skip adding option: Invalid option name: \"{}\"; "
-                        "Option name must start with '-'.",
-                        optName);
+        m_logger->warn("Skip adding option: Invalid option name: {}; "
+                       "Option name must start with '-'.",
+                       optName);
         return;
     }
     // Check if the option already exists.
     if (m_options.find(std::string(optName)) != m_options.end()) {
-        _INNER_YWARNING("Skip adding option: Option \"{}\" already exists.",
-                        optName);
+        m_logger->warn("Skip adding option: Option {} already exists.",
+                       optName);
         return;
     }
     if (type == "ArgParser::flag_t") {
         defaultValue = "false";
-        m_helpMessage += std::format(
-            "  {:<20} {:<20} {:<20} \"{}\"\n", optName, type,
-            std::format("[{}]", defaultValue.value_or("")), description);
+        m_helpMessage += spdlog::fmt_lib::format(
+            "  Arg: {}\n  |- Type: {}\n  |- Default: {}\n  |- Description: "
+            "\"{}\"\n",
+            optName, type, defaultValue.value_or(""), description);
     } else {
-        m_helpMessage += std::format(
-            "  {:<20} {:<20} {:<20} \"{}\"\n", optName + " <value>", type,
-            std::format("[{}]", defaultValue.value_or("")), description);
+        m_helpMessage += spdlog::fmt_lib::format(
+            "  Arg: {}\n  |- Type: {}\n  |- Defulat: {}\n  |- Description: "
+            "\"{}\"\n",
+            optName + " <value>", type, defaultValue.value_or(""), description);
     }
     // Add the option to the map.
     m_options[optName] = {description, type, defaultValue};
@@ -74,11 +86,11 @@ bool ArgParser::parse(int argc, char* argv[]) noexcept
                 it->second.strVal = argv[i + 1];
                 ++i;
             } else {
-                _INNER_YERROR("Option \"{}\" requires a value", arg);
+                m_logger->error("Option \"{}\" requires a value", arg);
                 return false;
             }
         } else {
-            _INNER_YERROR("Unknown option: \"{}\"", arg);
+            m_logger->error("Unknown option: \"{}\"", arg);
             return false;
         }
     }

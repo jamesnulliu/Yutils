@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstring>
 #include <format>
-#include <ranges>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -36,6 +36,9 @@ public:
 template <typename RawT>
 class Serializer;
 
+/**
+ * @brief Object <-> std::vector<std::byte>.
+ */
 template <>
 class Serializer<std::vector<std::byte>>
     : public BaseSerializer<Serializer<std::vector<std::byte>>>
@@ -62,7 +65,7 @@ public:
             return data;
         }
         // ELIF: Std containers with heap-allocated memory
-        else if constexpr (std::ranges::range<ObjT>) {
+        else if constexpr (yutils::IsRange<ObjT>::value) {
             RawT data(sizeof(typename ObjT::value_type) * object.size());
             std::memcpy(data.data(), object.data(), data.size());
             return data;
@@ -80,22 +83,22 @@ public:
         if constexpr (std::is_same_v<ObjT, std::vector<std::byte>>) {
             return rawData;
         }
-        // ELIF: Scalar type or std containers with stack-allocated memory
+        // ELIF: Scalar type or containers with stack-allocated memory
         else if constexpr (std::is_trivially_copyable_v<ObjT>) {
             if (rawData.size() != sizeof(ObjT)) {
-                throw std::runtime_error(
-                    std::format("Size of data ({}B) does not match the size of "
-                                "the object ({}B) to be deserialized.",
-                                rawData.size(), sizeof(ObjT)));
+                throw std::runtime_error(spdlog::fmt_lib::format(
+                    "Size of data ({}B) does not match the size of "
+                    "the object ({}B) to be deserialized.",
+                    rawData.size(), sizeof(ObjT)));
             }
             ObjT result;
             std::memcpy(&result, rawData.data(), sizeof(ObjT));
             return result;
         }
-        // ELIF: Std containers with heap-allocated memory
-        else if constexpr (std::ranges::range<ObjT>) {
+        // ELIF: Containers with heap-allocated memory
+        else if constexpr (yutils::IsRange<ObjT>::value) {
             if (rawData.size() % sizeof(typename ObjT::value_type) != 0) {
-                throw std::runtime_error(std::format(
+                throw std::runtime_error(spdlog::fmt_lib::format(
                     "Size of data ({}B) is not a multiple of the size "
                     "of the object ({}B) to be deserialized.",
                     rawData.size(), sizeof(typename ObjT::value_type)));
@@ -112,7 +115,7 @@ public:
 };
 
 /**
- * @brief Serialize object to std::string.
+ * @brief Object <-> std::string.
  */
 template <>
 class Serializer<std::string> : public BaseSerializer<Serializer<std::string>>
@@ -149,7 +152,7 @@ public:
             return rawData;
         } else if constexpr (std::is_same_v<ObjT, bool>) {
             auto falseFlag = {"false", "0", "False", "FALSE"};
-            return std::ranges::find(falseFlag, rawData) == falseFlag.end();
+            return std::find(falseFlag.begin(), falseFlag.end(), rawData) == falseFlag.end();
         } else if constexpr (std::is_enum_v<ObjT>) {
             return static_cast<ObjT>(std::stoi(rawData));
         } else {
@@ -157,7 +160,7 @@ public:
             std::stringstream ss(rawData);
             ss >> result;
             if (ss.fail()) {
-                throw std::runtime_error(std::format(
+                throw std::runtime_error(spdlog::fmt_lib::format(
                     "Failed when converting rawData to original Type: {}.",
                     typeName<ObjT>()));
             }

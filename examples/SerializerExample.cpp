@@ -1,17 +1,26 @@
-#include "Yutils/Logger.hpp"
-#include "Yutils/Serializer.hpp"
+#include "Yutils/Common.hpp"
+#include <Yutils/Serializer.hpp>
 #include <cstdio>
+#include <format>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <vector>
 
 using namespace yutils;
+
+using spdlog::fmt_lib::format;
 
 // =============================================================================
 // Example: Serilize std::vector<double> to std::vector<std::byte>
 // -----------------------------------------------------------------------------
 void test_bytesSerialization()
 {
-    YINFO("\n{:=<80}", ":) Bytes serialization for std::vector<double, 5> ");
+    spdlog::info("\n{:=<80}",
+                 ":) Bytes serialization for std::vector<double, 5> ");
+
+    // Serializer<RawT> is a template class that provides functions to serialize
+    // and deserialize objects of type `ObjT` to/from type `RawT`.
+    using BytesSerializer = Serializer<std::vector<std::byte>>;
 
     std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0};
 
@@ -22,24 +31,23 @@ void test_bytesSerialization()
     auto serialized =
         // `serialize` is a static method of class `yutils::Serializer<RawT>`.
         // It takes an object of type `ObjT` and returns a `RawT`.
-        yutils::Serializer<std::vector<std::byte>>::serialize(data);
+        BytesSerializer::serialize(data);
     std::string bytesStr;
     for (const auto& byte : serialized) {
-        bytesStr += std::format("{:02X} ", static_cast<int>(byte));
+        bytesStr += format("{:02X} ", static_cast<int>(byte));
     }
-    YTRACE("Serialized: {}", bytesStr);
-    // To deserialize objects from type `RawT`, you need to use function
-    // `deserialize` provided by class `yutils::Serializer<RawT>`.
-    // In the following example, we deserialize `serialized` (which is a
-    // `RawT`=`std::vector<std::byte>`) to a `ObjT`=`std::vector<double>`.
+    spdlog::trace("Serialized: {}", bytesStr);
     auto deserialized =
-        yutils::Serializer<std::vector<std::byte>>::deserialize<decltype(data)>(
-            serialized);
+        // To deserialize objects from type `RawT`, you need to use function
+        // `deserialize` provided by class `yutils::Serializer<RawT>`.
+        // In the following example, we deserialize `serialized` (which is a
+        // `RawT`=`std::vector<std::byte>`) to a `ObjT`=`std::vector<double>`.
+        BytesSerializer::deserialize<decltype(data)>(serialized);
     std::string doubleStr;
     for (const auto& val : deserialized) {
-        doubleStr += std::format("{:.1f} ", val);
+        doubleStr += format("{:.1f} ", val);
     }
-    YTRACE("Deserialized: {}", doubleStr);
+    spdlog::trace("Deserialized: {}", doubleStr);
     std::puts("");
 }
 // =============================================================================
@@ -71,13 +79,14 @@ User Serializer<std::string>::deserializeImpl(const std::string& rawData)
 
 void test_serializeUser2String()
 {
-    YINFO("\n{:=<80}", ":) String serialization for struct User ");
+    using StrSerializer = Serializer<std::string>;
+    spdlog::info("\n{:=<80}", ":) String serialization for struct User ");
     User user = {"Tom", 18};
-    auto serialized = Serializer<std::string>::serialize(user);
-    YTRACE("Serialized: {}", serialized);
-    User deserialized = Serializer<std::string>::deserialize<User>(serialized);
-    YTRACE("Deserialized: name={}, age={}", deserialized.name,
-           deserialized.age);
+    auto serialized = StrSerializer::serialize(user);
+    spdlog::trace("Serialized: {}", serialized);
+    User deserialized = StrSerializer::deserialize<User>(serialized);
+    spdlog::trace("Deserialized: name={}, age={}", deserialized.name,
+                  deserialized.age);
     std::puts("");
 }
 // -----------------------------------------------------------------------------
@@ -114,14 +123,6 @@ public:
     static RawT serializeImpl(const ObjT& object) = delete;
     template <typename ObjT>
     static ObjT deserializeImpl(const RawT& rawData) = delete;
-
-    // Specialize the template functions for struct User.
-    // Declaration for `serializeImpl`.
-    template <>
-    RawT serializeImpl(const User& object);
-    // Declaration for `deserializeImpl`.
-    template <>
-    User deserializeImpl(const RawT& rawData);
 };
 
 // Define the specialization for the template function `serializeImpl`.
@@ -147,24 +148,26 @@ User Serializer<std::vector<int>>::deserializeImpl(const RawT& object)
 
 void test_serializeUser2VectorInt()
 {
-    YINFO("\n{:=<80}", ":) std::vector<int> serialization for struct User ");
+    using VecIntSerializer = Serializer<std::vector<int>>;
+    spdlog::info("\n{:=<80}",
+                 ":) std::vector<int> serialization for struct User ");
     User user = {"Tom", 18};
-    auto serialized = Serializer<std::vector<int>>::serialize(user);
+    auto serialized = VecIntSerializer::serialize(user);
     std::string intStr;
     for (const auto& byte : serialized) {
-        intStr += std::format("{:08} ", byte);
+        intStr += format("{:08} ", byte);
     }
-    YTRACE("Serialized: {}", intStr);
-    User deserialized =
-        Serializer<std::vector<int>>::deserialize<User>(serialized);
-    YTRACE("Deserialized: name={}, age={}", deserialized.name,
-           deserialized.age);
+    spdlog::trace("Serialized: {}", intStr);
+    User deserialized = VecIntSerializer::deserialize<User>(serialized);
+    spdlog::trace("Deserialized: name={}, age={}", deserialized.name,
+                  deserialized.age);
     std::puts("");
 }
 // =============================================================================
 
 int main()
 {
+    spdlog::set_level(spdlog::level::trace);
     test_bytesSerialization();
     test_serializeUser2String();
     test_serializeUser2VectorInt();

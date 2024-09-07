@@ -1,8 +1,8 @@
-#include <Yutils/Logger.hpp>
 #include <Yutils/SimpleCSV.hpp>
 #include <filesystem>
 #include <fstream>
 #include <vector>
+#include <spdlog/spdlog.h>
 
 using std::string_literals::operator""s;
 
@@ -14,14 +14,14 @@ int main()
     csv.appendRow(csv.makeStrVec(1, "", 4.8, ""));
     csv.appendRow(csv.makeStrVec(2, "3", 5.8, 7.0));
 
-    auto filePath = "results/example.csv";
+    const char* filePath = "results/example.csv";
     auto parentPath = std::filesystem::path(filePath).parent_path();
     if (!std::filesystem::exists(parentPath)) {
         std::filesystem::create_directories(parentPath);
     }
     std::ofstream file(filePath);
     if (!file.is_open()) {
-        YERROR("Failed to open file: {}", filePath);
+        spdlog::error("Failed to open file: {}", filePath);
         return 1;
     }
 
