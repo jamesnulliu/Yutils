@@ -4,17 +4,19 @@ cmake_minimum_required(VERSION 3.21)
 # Project name
 project(Yutils VERSION 1.1.0)
 
+set(YUTILS_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 # Some Logger functions --------------------------------------------------------
-include(${CMAKE_SOURCE_DIR}/cmake/Logging.cmake)
+include(${YUTILS_PROJECT_DIR}/cmake/Logging.cmake)
 
 # Arguments --------------------------------------------------------------------
-include(${CMAKE_SOURCE_DIR}/cmake/Arguments.cmake)
+include(${YUTILS_PROJECT_DIR}/cmake/Arguments.cmake)
 
 # Compiler and Linker Configurations -------------------------------------------
-include(${CMAKE_SOURCE_DIR}/cmake/Compiler.cmake)
+include(${YUTILS_PROJECT_DIR}/cmake/Compiler.cmake)
 
 # Library Install Utilities ----------------------------------------------------
-include(${CMAKE_SOURCE_DIR}/cmake/InstallLibraries.cmake)
+include(${YUTILS_PROJECT_DIR}/cmake/InstallLibraries.cmake)
 
 # Yutils library ---------------------------------------------------------------
 add_subdirectory(src)
