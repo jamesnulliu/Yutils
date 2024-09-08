@@ -16,7 +16,7 @@ file(GLOB_RECURSE YUTILS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 add_library(${TARGET_NAME} ${YUTILS_SRCS})
 add_library(Yutils::${TARGET_NAME} ALIAS ${TARGET_NAME})
 
-log_info("${CYAN_CAT} Target: ${TARGET_NAME}")
+yutils_log_info("${YUTILS_LOG_CYAN_CAT} Target: ${TARGET_NAME}")
 
 # Set library version
 set_target_properties(${TARGET_NAME} PROPERTIES VERSION ${TARGET_VERSION})
@@ -46,4 +46,4 @@ else()  # Static Library
 endif()
 
 # Installations ===============================================================
-install_libraries(${TARGET_NAME} Yutils "${TARGET_NAME}")
+yutils_install_libraries(${TARGET_NAME} Yutils "${TARGET_NAME}")

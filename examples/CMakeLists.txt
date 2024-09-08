@@ -11,7 +11,7 @@ link_libraries(Yutils::Yutils)
 # ------------------------------------------------------------------------------
 set(EXAMPLE_NAME ArgParserExample)
 add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
-log_info("${CYAN_CAT} Target: ${EXAMPLE_NAME}")
+yutils_log_info("${YUTILS_LOG_CYAN_CAT} Target: ${EXAMPLE_NAME}")
 # ==============================================================================
 
 # ==============================================================================
