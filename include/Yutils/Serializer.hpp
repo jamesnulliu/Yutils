@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "Yutils/Common.hpp"
+#include "Yutils/TypeTraits.hpp"
 
 namespace yutils
 {
@@ -20,14 +21,16 @@ template <typename DerivedT>
 class BaseSerializer
 {
 public:
+    using RawT = yutils::type_traits::GetInnerType_t<DerivedT>;
+
     template <typename ObjT>
-    static auto serialize(const ObjT& object)
+    static RawT serialize(const ObjT& object)
     {
         return DerivedT::template serializeImpl<ObjT>(object);
     }
 
     template <typename ObjT>
-    static ObjT deserialize(const auto& rawData)
+    static ObjT deserialize(const RawT& rawData)
     {
         return DerivedT::template deserializeImpl<ObjT>(rawData);
     }

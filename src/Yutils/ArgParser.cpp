@@ -14,13 +14,15 @@ ArgParser::ArgParser(std::string_view argv0)
     m_logger = spdlog::stdout_color_mt("yutils::ArgParser");
 
     // Add the executable name to the help message.
-    m_options["--help"] = {"Show help messages.", "yutils::flag_t", "false"};
+    m_options["--help"] = {"Show help messages.", "yutils::Argparser::flag_t",
+                           "false"};
     m_helpMessage = spdlog::fmt_lib::format(
         "Usage:\n    {} [options]\nOptions:\n", extractFilename(argv0));
     m_helpMessage += spdlog::fmt_lib::format(
         "  Arg: {}\n  |- Type: {}\n  |- Default: {}\n  |- Description: "
         "{}\n",
-        "--help", "flag_t", "false", "Show help messages.");
+        "--help", "yutils::ArgParser::flag_t (aka. bool)", "false",
+        "Show help messages.");
 };
 
 void ArgParser::addOption(const std::string& optName, const std::string& type,
@@ -34,7 +36,7 @@ void ArgParser::addOption(const std::string& optName, const std::string& type,
         return;
     }
     // Check if the option name is valid.
-    if (optName.empty() || !optName.starts_with('-')) {
+    if (optName.empty() || !(optName.substr(0, 1) == "-")) {
         m_logger->warn("Skip adding option: Invalid option name: {}; "
                        "Option name must start with '-'.",
                        optName);
@@ -46,10 +48,11 @@ void ArgParser::addOption(const std::string& optName, const std::string& type,
                        optName);
         return;
     }
-    if (type == "ArgParser::flag_t") {
+    if (type == "yutils::ArgParser::flag_t") {
         defaultValue = "false";
         m_helpMessage += spdlog::fmt_lib::format(
-            "  Arg: {}\n  |- Type: {}\n  |- Default: {}\n  |- Description: "
+            "  Arg: {}\n  |- Type: {} (aka. bool)\n  |- Default: {}\n  |- "
+            "Description: "
             "\"{}\"\n",
             optName, type, defaultValue.value_or(""), description);
     } else {

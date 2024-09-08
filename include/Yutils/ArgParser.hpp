@@ -28,12 +28,13 @@ public:
      * @param supposedType The supposed type of the option.
      *        [Note]:
      *        1. This is just a suggestion for the option's type; The actual
-     *           type is determined when calling `ArgParser::get()`. There will
-     *           be no type check about whether `defaultValue` can be converted
-     *           to `supposedType` in this function.
-     *        2. If provided `ArgParser::flag_t` for `supposedType`, the option
-     *           is supposed to be a flag (which doesn't require a value); When
-     *           parsing, if the option is found, its value will be set to
+     *           type is determined when calling `ArgParser::get<T>()`.
+     *           There is NO type check about whether `defaultValue` can be
+     *           converted to `supposedType` in this function.
+     *        2. If provided `yutils::ArgParser::flag_t` for `supposedType`,
+     *           the option is supposed to be a flag (which doesn't require a
+     *           value);
+     *           When parsing, if the option is found, its value will be set to
      *           `true`; Otherwise, it will be set to `false`.
      * @param description [Optional] The description of the option.
      * @param defaultValue [Optional] The default value of the option.
@@ -90,6 +91,8 @@ private:
         std::string type;         // Supposed type of the option.
         std::optional<std::string> strVal;
     };
+
+private:
     std::unordered_map<std::string, Option> m_options;
     std::string m_helpMessage;
     std::shared_ptr<spdlog::logger> m_logger;

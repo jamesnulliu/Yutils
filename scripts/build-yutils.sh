@@ -4,7 +4,7 @@ if [ -z "$SPDLOG_HOME" ]; then
 fi
 
 cmake -G Ninja -S . -B ./build \
-    -DCMAKE_CXX_STANDARD=23 \
+    -DCMAKE_CXX_STANDARD=17 \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
     -DYUTILS_BUILD_EXAMPLES=ON \

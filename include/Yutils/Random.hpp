@@ -7,6 +7,7 @@
 #include <memory>
 #include <numeric>
 #include <random>
+#include <spdlog/fmt/bundled/format.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 #include <type_traits>
@@ -33,18 +34,18 @@ public:
         }
     }
 
-    static _ValTy operator()(double min, double max)
+    _ValTy operator()(double min, double max)
     {
         setParams(min, max);
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    static _ValTy operator()()
+    _ValTy operator()()
     {
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    static std::vector<_ValTy> generateVec(std::size_t size, double min,
+    std::vector<_ValTy> generateVec(std::size_t size, double min,
                                            double max,
                                            const std::string& saveLocation = "")
     {
@@ -99,20 +100,20 @@ public:
         }
     }
 
-    static _ValTy operator()(double mean, double stddev)
+    _ValTy operator()(double mean, double stddev)
     {
         setParams(mean, stddev);
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    static _ValTy operator()()
+    _ValTy operator()()
     {
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    static std::vector<_ValTy> generateVec(std::size_t size, double mean,
-                                           double stddev,
-                                           const std::string& saveLocation = "")
+    std::vector<_ValTy> generateVec(std::size_t size, double mean,
+                                    double stddev,
+                                    const std::string& saveLocation = "")
     {
         std::vector<_ValTy> vec;
         std::normal_distribution<double> distribution(mean, stddev);
@@ -196,8 +197,8 @@ public:
                 randVec.size();
             std::vector<std::size_t> bins(kBinNum);
 
-            os << std::format("Min: {} | Max: {} | Average: {}\n", minElem,
-                              maxElem, average);
+            os << spdlog::fmt_lib::format("Min: {} | Max: {} | Average: {}\n",
+                                          minElem, maxElem, average);
 
             for (const auto& val : randVec) {
                 auto bin = static_cast<std::size_t>(double(val - minElem) /
