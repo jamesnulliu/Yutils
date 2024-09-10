@@ -15,6 +15,13 @@ class ArgParser
 public:
     using flag_t = bool;
 
+    struct Option
+    {
+        std::string description;  // Description of the option.
+        std::string type;         // Supposed type of the option.
+        std::optional<std::string> strVal;
+    };
+
 public:
     YUTILS_API explicit ArgParser(std::string_view argv0);
     ~ArgParser() = default;
@@ -85,12 +92,8 @@ public:
     }
 
 private:
-    struct Option
-    {
-        std::string description;  // Description of the option.
-        std::string type;         // Supposed type of the option.
-        std::optional<std::string> strVal;
-    };
+    YUTILS_API std::string generateHelpMessage(std::string_view arg,
+                                               const Option& option) const;
 
 private:
     std::unordered_map<std::string, Option> m_options;

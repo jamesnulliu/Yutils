@@ -1,5 +1,6 @@
 if [ -z "$SPDLOG_HOME" ]; then
     echo "SPDLOG_HOME is not set"
+    echo "Aborting..."
     exit 1
 fi
 

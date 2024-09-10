@@ -7,7 +7,6 @@
 #include <memory>
 #include <numeric>
 #include <random>
-#include <spdlog/fmt/bundled/format.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 #include <type_traits>
@@ -45,9 +44,8 @@ public:
         return static_cast<_ValTy>(m_distribution->operator()(m_engine));
     }
 
-    std::vector<_ValTy> generateVec(std::size_t size, double min,
-                                           double max,
-                                           const std::string& saveLocation = "")
+    std::vector<_ValTy> generateVec(std::size_t size, double min, double max,
+                                    const std::string& saveLocation = "")
     {
         std::vector<_ValTy> vec;
         std::uniform_real_distribution<double> distribution(min, max);

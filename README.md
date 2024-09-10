@@ -6,12 +6,12 @@
 
 ```bash
 # Clone the spdlog project
-export SPDLOG_PROJECT_DIR="/path/to/spdlog"
+export SPDLOG_PROJECT_DIR="/path/to/spdlog/project/dir"
 git clone https://github.com/gabime/spdlog.git  "${SPDLOG_PROJECT_DIR}"
 
-export SPDLOG_HOME="${SPDLOG_PROJECT_DIR}/spdlog"
+export SPDLOG_HOME="path/to/spdlog/installation/dir"
 
-bash ./scripts/install-spdlog.sh Release --std-format
+bash ./scripts/build-and-install-spdlog.sh Release
 ```
 
 ## Build
@@ -23,5 +23,5 @@ bash scripts/build-yutils.sh
 ## Install
 
 ```bash
-bash scripts/install-yutils.sh
+cmake --install ./build --prefix <install_dir>
 ```
