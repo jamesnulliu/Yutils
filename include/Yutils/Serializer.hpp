@@ -165,7 +165,7 @@ public:
             if (ss.fail()) {
                 throw std::runtime_error(spdlog::fmt_lib::format(
                     "Failed when converting rawData to original Type: {}.",
-                    typeName<ObjT>()));
+                    yutils::type_traits::typeName<ObjT>()));
             }
             return result;
         }

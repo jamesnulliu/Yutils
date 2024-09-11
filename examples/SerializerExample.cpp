@@ -1,10 +1,12 @@
-#include "Yutils/Common.hpp"
-#include <Yutils/Serializer.hpp>
 #include <cstdio>
 #include <format>
 #include <spdlog/spdlog.h>
 #include <string>
 #include <vector>
+
+#include <Yutils/Common.hpp>
+#include <Yutils/Serializer.hpp>
+#include <Yutils/TypeTraits.hpp>
 
 using namespace yutils;
 
@@ -21,6 +23,9 @@ void test_bytesSerialization()
     // Serializer<RawT> is a template class that provides functions to serialize
     // and deserialize objects of type `ObjT` to/from type `RawT`.
     using BytesSerializer = Serializer<std::vector<std::byte>>;
+
+    spdlog::info("Serializer Type: {}",
+                 yutils::type_traits::typeName<BytesSerializer>());
 
     std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0};
 
@@ -80,6 +85,10 @@ User Serializer<std::string>::deserializeImpl(const std::string& rawData)
 void test_serializeUser2String()
 {
     using StrSerializer = Serializer<std::string>;
+
+    spdlog::info("Serializer Type: {}",
+                 yutils::type_traits::typeName<StrSerializer>());
+
     spdlog::info("\n{:=<80}", ":) String serialization for struct User ");
     User user = {"Tom", 18};
     auto serialized = StrSerializer::serialize(user);
@@ -149,6 +158,10 @@ User Serializer<std::vector<int>>::deserializeImpl(const RawT& object)
 void test_serializeUser2VectorInt()
 {
     using VecIntSerializer = Serializer<std::vector<int>>;
+
+    spdlog::info("Serializer Type: {}",
+                 yutils::type_traits::typeName<VecIntSerializer>());
+
     spdlog::info("\n{:=<80}",
                  ":) std::vector<int> serialization for struct User ");
     User user = {"Tom", 18};
