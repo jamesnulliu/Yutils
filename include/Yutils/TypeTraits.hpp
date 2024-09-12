@@ -1,29 +1,29 @@
 #pragma once
 
+#include <cstddef>
 #include <string_view>
+#include <tuple>
 
 namespace yutils::type_traits
 {
 
-template <typename>
-struct GetInnerType;
+template <typename T>
+struct GetInnerTypes;
 
-template <template <typename...> class TemplateClass, typename InnerType>
-struct GetInnerType<TemplateClass<InnerType>>
+template <template <typename...> class TemplateClass, typename... InnerTypes>
+struct GetInnerTypes<TemplateClass<InnerTypes...>>
 {
-    using type = InnerType;
+    using types = std::tuple<InnerTypes...>;
 };
 
 template <typename T>
-using GetInnerType_t = typename GetInnerType<T>::type;
+using GetInnerTypes_t = typename GetInnerTypes<T>::types;
+
+template <typename T, std::size_t N = 0>
+using GetInnerType_t = std::tuple_element_t<N, GetInnerTypes_t<T>>;
 
 /**
  * @brief Return the type name of the template parameter.
- *
- * @return constexpr std::string_view
- * @bug [2024/08/03] The first character of the returned string is missing.
- * @bug [2024/09/03] The above bug can be reproduced by both GCC and Clang on
- *                   Windows.
  */
 template <typename T>
 constexpr std::string_view typeName()
