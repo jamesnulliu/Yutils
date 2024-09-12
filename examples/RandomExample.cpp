@@ -16,7 +16,8 @@ int main(int argc, char* argv[])
 
     // Uniform or normal distribution
     argParser.addOption("--distribution", "std::string",
-                        "Distribution of the random number generator",
+                        "Distribution of the random number generator; Possible "
+                        "value: [uniform, normal]",
                         "uniform");
     argParser.addOption("--dParam1", "double",
                         "Minimum value of the random number", "0");
@@ -25,11 +26,9 @@ int main(int argc, char* argv[])
     argParser.addOption("--num", "size_t",
                         "Number of random numbers to generate", "10");
 
-    argParser.parse(argc, argv);
-
-    if (argParser.get<bool>("--help")) {
+    if (!argParser.parse(argc, argv)) {
         argParser.getHelpMessage();
-        spdlog::trace("\n{}", argParser.getHelpMessage());
+        spdlog::critical("\n{}", argParser.getHelpMessage());
         return 0;
     }
 
@@ -48,9 +47,9 @@ int main(int argc, char* argv[])
 
     auto genRandNumber = [&]() {
         if (distribution == "uniform") {
-            return randUniform(dParam1, dParam2);
+            return randUniform.generate(dParam1, dParam2);
         } else if (distribution == "normal") {
-            return randNormal(dParam1, dParam2);
+            return randNormal.generate(dParam1, dParam2);
         } else {
             throw std::runtime_error("Unknown distribution: " + distribution);
         }
@@ -66,12 +65,11 @@ int main(int argc, char* argv[])
         }
     };
 
-
     yutils::DistributionVisualizer<double> visualizer;
 
     auto vec = genRandVec(num);
 
-    visualizer(genRandVec(num));
+    visualizer.visualize(genRandVec(num));
 
     return 0;
 }

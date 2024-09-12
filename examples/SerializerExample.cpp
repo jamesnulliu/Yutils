@@ -115,30 +115,19 @@ class Serializer<std::vector<int>>
     : public BaseSerializer<Serializer<std::vector<int>>>
 {
 public:
-    // Define some types for convenience.
-    using RawT = std::vector<int>;
-    using MyT = Serializer<RawT>;
-    using BaseT = BaseSerializer<MyT>;
-
-    // Using `serialize` and `deserialize` from BaseSerializer is required
-    // because `Serializer` is a template class.
-    using BaseT::deserialize;
-    using BaseT::serialize;
-
-public:
     // Mark the template functions as deleted;
-    // We will only use the specialization for this template.
+    // We will only use some specializations for this template.
     template <typename ObjT>
-    static RawT serializeImpl(const ObjT& object) = delete;
+    static std::vector<int> serializeImpl(const ObjT& object) = delete;
     template <typename ObjT>
-    static ObjT deserializeImpl(const RawT& rawData) = delete;
+    static ObjT deserializeImpl(const std::vector<int>& rawData) = delete;
 };
 
 // Define the specialization for the template function `serializeImpl`.
 template <>
 std::vector<int> Serializer<std::vector<int>>::serializeImpl(const User& object)
 {
-    RawT rawData(sizeof(char) * object.name.size() + sizeof(int));
+    std::vector<int> rawData(sizeof(char) * object.name.size() + sizeof(int));
     std::memcpy(rawData.data(), object.name.data(), object.name.size());
     std::memcpy(rawData.data() + object.name.size(), &object.age, sizeof(int));
     return rawData;
@@ -146,7 +135,7 @@ std::vector<int> Serializer<std::vector<int>>::serializeImpl(const User& object)
 
 // Define the specialization for the template function `deserializeImpl`.
 template <>
-User Serializer<std::vector<int>>::deserializeImpl(const RawT& object)
+User Serializer<std::vector<int>>::deserializeImpl(const std::vector<int>& object)
 {
     User user;
     user.name = std::string(object.begin(), object.begin() + sizeof(char) * 3);
