@@ -29,10 +29,10 @@ yutils_log_info("|- Build Examples: ${YUTILS_BUILD_EXAMPLES}")
 # Spdlog install directory -----------------------------------------------------
 if(NOT SPDLOG_HOME)
     # Try use environment variable
-    if (DEFINED $ENV{SPDLOG_HOME})
+    if (NOT $ENV{SPDLOG_HOME} STREQUAL "")
         set(SPDLOG_HOME $ENV{SPDLOG_HOME})
     else()
-        log_fatal("|- SPDLOG_HOME is not set.")
+        yutils_log_fatal("|- SPDLOG_HOME is not set.")
     endif()
 endif()
 yutils_log_info("|- SPDLOG_HOME: ${SPDLOG_HOME}")
