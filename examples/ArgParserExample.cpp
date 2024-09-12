@@ -14,12 +14,9 @@ int main(int argc, char* argv[])
     argParser.addOption("--age", "int", "Age of the user", "18");
     argParser.addOption("-v", "yutils::ArgParser::flag_t", "Verbose mode");
 
-    argParser.parse(argc, argv);
-
     // `ArgParser::get` uses `Serializer::deserialize` to convert the string to
     // the desired type.
-
-    if (argParser.get<bool>("--help")) {
+    if (!argParser.parse(argc, argv)) {
         argParser.getHelpMessage();
         spdlog::info("\n{}", argParser.getHelpMessage());
         return 0;

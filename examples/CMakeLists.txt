@@ -34,3 +34,10 @@ add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
 set(EXAMPLE_NAME RandomExample)
 add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
 # ==============================================================================
+
+# ==============================================================================
+# Factory Example
+# ------------------------------------------------------------------------------
+set(EXAMPLE_NAME FactoryExample)
+add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
+# ==============================================================================
