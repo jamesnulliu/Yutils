@@ -7,6 +7,7 @@ set(TARGET_NAME Yutils)
 # Library version
 set(TARGET_VERSION ${PROJECT_VERSION})
 
+find_package(Threads REQUIRED)
 find_package(spdlog REQUIRED PATHS ${SPDLOG_HOME})
 
 # Collect all source files
@@ -39,10 +40,10 @@ endif()
 
 if(BUILD_SHARED_LIBS)  # Shared Library
     target_compile_definitions(${TARGET_NAME} PRIVATE YUTILS_EXPORT)
-    target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>)
+    target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog Threads::Threads)
     target_compile_definitions(${TARGET_NAME} INTERFACE YUTILS_IMPORT)
 else()  # Static Library
-    target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
+    target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog Threads::Threads)
 endif()
 
 # Installations ===============================================================
