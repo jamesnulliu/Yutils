@@ -7,7 +7,7 @@
 
 namespace yutils
 {
-template <typename KeyT, typename CreatorT,
+template <typename KeyT, typename CreatorT, bool ThreadSafe = false,
           typename ContainerT = std::unordered_map<KeyT, CreatorT>>
 class Factory
 {
@@ -18,20 +18,26 @@ public:
 public:
     void registerCreator(const KeyT& key, const CreatorT& creator)
     {
-        std::unique_lock<std::shared_mutex> lock(m_mutex);
+        if constexpr (ThreadSafe) {
+            std::unique_lock<std::shared_mutex> lock(m_mutex);
+        }
         m_container[key] = creator;
     }
 
     void unregisterCreator(const KeyT& key)
     {
-        std::unique_lock<std::shared_mutex> lock(m_mutex);
+        if constexpr (ThreadSafe) {
+            std::unique_lock<std::shared_mutex> lock(m_mutex);
+        }
         m_container.erase(key);
     }
 
     template <typename... Args>
     auto create(const KeyT& key, Args&&... args)
     {
-        std::shared_lock<std::shared_mutex> lock(m_mutex);
+        if constexpr (ThreadSafe) {
+            std::shared_lock<std::shared_mutex> lock(m_mutex);
+        }
         using ValT =
             decltype(m_container.begin()->second(std::forward<Args>(args)...));
         auto it = m_container.find(key);
@@ -45,14 +51,16 @@ public:
 
     std::optional<CreatorT> getCreator(const KeyT& key) const
     {
-        std::shared_lock<std::shared_mutex> lock(m_mutex);
+        if constexpr (ThreadSafe) {
+            std::shared_lock<std::shared_mutex> lock(m_mutex);
+        }
         auto it = m_container.find(key);
         // Return the creator function if key found.
         if (it != m_container.end()) {
-            return std::optional<CreatorT>{it->second};
+            return {it->second};
         }
         // Return empty optional if key not found.
-        return std::optional<CreatorT>{};
+        return {std::nullopt};
     }
 
 private:
