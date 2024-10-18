@@ -27,7 +27,7 @@ jobs:
         # Check if clang-format introduced any changes
         if [[ `git status --porcelain` ]]; then
           echo "Files were not properly formatted. Trying to push the formatted changes."
-          ehco "format_status=fail" >> $GITHUB_OUTPUT
+          echo "format_status=fail" >> $GITHUB_OUTPUT
         else
           echo "All files are properly formatted."
           echo "format_status=pass" >> $GITHUB_OUTPUT
