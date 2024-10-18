@@ -37,7 +37,9 @@ void test_bytesSerialization()
         // It takes an object of type `ObjT` and returns a `RawT`.
         BytesSerializer::serialize(data);
     std::string bytesStr;
-    for (const auto& byte : serialized) { bytesStr += format("{:02X} ", static_cast<int>(byte)); }
+    for (const auto& byte : serialized) {
+        bytesStr += format("{:02X} ", static_cast<int>(byte));
+    }
     spdlog::trace("Serialized: {}", bytesStr);
     auto deserialized =
         // To deserialize objects from type `RawT`, you need to use function
