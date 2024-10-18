@@ -62,6 +62,9 @@ jobs:
       if: runner.os == 'Windows'
       run: choco install ninja
 
+    - name: Pull the new changes (if any, could be push in the previous workflow)
+      run: git pull origin main
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
