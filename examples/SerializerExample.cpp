@@ -137,7 +137,8 @@ template <>
 User Serializer<std::vector<int>>::deserializeImpl(
     const std::vector<int>& object)
 {
-    User user; user.name = std::string(object.begin(), object.begin() + sizeof(char) * 3);
+    User user;
+    user.name = std::string(object.begin(), object.begin() + sizeof(char) * 3);
     user.age = *reinterpret_cast<const int*>(object.data() + sizeof(char) * 3);
     return user;
 }
