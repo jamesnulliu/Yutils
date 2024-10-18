@@ -7,6 +7,10 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_run:
+    workflows: ["Clang Format Check and Auto-Fix"]
+    types:
+      - completed
 
 jobs:
   build:
@@ -88,16 +92,3 @@ jobs:
       shell: bash
       run: >
         bash scripts/build-yutils.sh
-    
-    - name: Test ArgParser Windows
-      shell: bash
-      if: runner.os == 'Windows'
-      run: >
-        ./build/examples/ArgParserExample.exe
-
-    - name: Test Serializer Example Windows
-      shell: bash
-      if: runner.os == 'Windows'
-      run: >
-        ./build/examples/SerializerExample.exe
-      

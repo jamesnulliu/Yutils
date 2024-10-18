@@ -37,9 +37,7 @@ void test_bytesSerialization()
         // It takes an object of type `ObjT` and returns a `RawT`.
         BytesSerializer::serialize(data);
     std::string bytesStr;
-    for (const auto& byte : serialized) {
-        bytesStr += format("{:02X} ", static_cast<int>(byte));
-    }
+    for (const auto& byte : serialized) { bytesStr += format("{:02X} ", static_cast<int>(byte)); }
     spdlog::trace("Serialized: {}", bytesStr);
     auto deserialized =
         // To deserialize objects from type `RawT`, you need to use function
@@ -134,7 +132,8 @@ std::vector<int> Serializer<std::vector<int>>::serializeImpl(const User& object)
 
 // Define the specialization for the template function `deserializeImpl`.
 template <>
-User Serializer<std::vector<int>>::deserializeImpl(const std::vector<int>& object)
+User Serializer<std::vector<int>>::deserializeImpl(
+    const std::vector<int>& object)
 {
     User user;
     user.name = std::string(object.begin(), object.begin() + sizeof(char) * 3);

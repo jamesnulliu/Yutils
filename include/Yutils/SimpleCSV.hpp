@@ -17,7 +17,6 @@ public:
     YUTILS_API ~SimpleCSV();
 
 public:
-
 public:
     std::size_t numRows() const
     {

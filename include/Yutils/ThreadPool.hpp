@@ -1111,7 +1111,7 @@ public:
     struct wait_deadlock : public std::runtime_error
     {
         wait_deadlock()
-            : std::runtime_error("BS::thread_pool::wait_deadlock"){};
+            : std::runtime_error("BS::thread_pool::wait_deadlock") {};
     };
 #endif
 

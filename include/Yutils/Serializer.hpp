@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
+#include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <stdexcept>
@@ -82,12 +83,10 @@ public:
         }
         // ELSE: Unsupported type
         else {
-            // static_assert(false, "Unsupported type for serialization.");
-            spdlog::error(
-                "Unsupported type for serialization: {} to {}.",
-                yutils::type_traits::typeName<ObjT>(),
-                yutils::type_traits::typeName<std::vector<std::byte>>());
-            throw std::runtime_error("Unsupported type for deserialization.");
+            throw std::runtime_error(spdlog::fmt_lib::format(
+                "Unsupported type for serialization. RawT: {}, ObjT: {}.",
+                yutils::type_traits::typeName<std::vector<std::byte>>(),
+                yutils::type_traits::typeName<ObjT>()));
         }
     }
 
@@ -124,12 +123,10 @@ public:
         }
         // ELSE: Unsupported type
         else {
-            // static_assert(false, "Unsupported type for deserialization.");
-            spdlog::error(
-                "Unsupported type for deserialization: {} from {}.",
-                yutils::type_traits::typeName<ObjT>(),
-                yutils::type_traits::typeName<std::vector<std::byte>>());
-            throw std::runtime_error("Unsupported type for deserialization.");
+            throw std::runtime_error(spdlog::fmt_lib::format(
+                "Unsupported type for deserialization. RawT: {}, ObjT: {}.",
+                yutils::type_traits::typeName<std::vector<std::byte>>(),
+                yutils::type_traits::typeName<ObjT>()));
         }
     }
 };
