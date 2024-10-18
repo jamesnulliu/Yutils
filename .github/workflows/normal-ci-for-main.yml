@@ -27,14 +27,14 @@ jobs:
         # Check if clang-format introduced any changes
         if [[ `git status --porcelain` ]]; then
           echo "Files were not properly formatted. Trying to push the formatted changes."
-          echo "::set-output name=format_status::fail"
+          ehco "format_status=fail" >> $GITHUB_OUTPUT
         else
           echo "All files are properly formatted."
-          echo "::set-output name=format_status::success"
+          echo "format_status=pass" >> $GITHUB_OUTPUT
         fi
 
     - name: Commit and push formatted changes
-      if: steps.format_check.outputs.format_status == 'fail'
+      if : ${{ steps.format_check.outputs.format_status == 'fail' }}
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
@@ -44,6 +44,7 @@ jobs:
 
   build:
     runs-on: ${{ matrix.os }}
+    needs: clang-format
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
       fail-fast: false
