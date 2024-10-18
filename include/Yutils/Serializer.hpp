@@ -87,7 +87,7 @@ public:
                 "Unsupported type for serialization: {} to {}.",
                 yutils::type_traits::typeName<ObjT>(),
                 yutils::type_traits::typeName<std::vector<std::byte>>());
-            return {};
+            throw std::runtime_error("Unsupported type for deserialization.");
         }
     }
 
@@ -129,7 +129,7 @@ public:
                 "Unsupported type for deserialization: {} from {}.",
                 yutils::type_traits::typeName<ObjT>(),
                 yutils::type_traits::typeName<std::vector<std::byte>>());
-            return {};
+            throw std::runtime_error("Unsupported type for deserialization.");
         }
     }
 };

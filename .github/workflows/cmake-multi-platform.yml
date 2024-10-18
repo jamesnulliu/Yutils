@@ -94,4 +94,10 @@ jobs:
       if: runner.os == 'Windows'
       run: >
         ./build/examples/ArgParserExample.exe
+
+    - name: Test Serializer Example Windows
+      shell: bash
+      if: runner.os == 'Windows'
+      run: >
+        ./build/examples/SerializerExample.exe
       
