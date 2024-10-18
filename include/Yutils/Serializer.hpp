@@ -47,6 +47,13 @@ public:
     {
         return DerivedT::template deserializeImpl<ObjT>(rawData);
     }
+
+    template <typename ObjT>
+    static void logRawTandObjT()
+    {
+        spdlog::error("RawT: {}", yutils::type_traits::typeName<RawT>());
+        spdlog::error("ObjT: {}", yutils::type_traits::typeName<ObjT>());
+    }
 };
 
 template <typename RawT>
@@ -82,6 +89,7 @@ public:
         }
         // ELSE: Unsupported type
         else {
+            logRawTandObjT<ObjT>();
             static_assert(false, "Unsupported type for serialization.");
         }
     }
@@ -119,6 +127,7 @@ public:
         }
         // ELSE: Unsupported type
         else {
+            logRawTandObjT<ObjT>();
             static_assert(false, "Unsupported type for deserialization.");
         }
     }
