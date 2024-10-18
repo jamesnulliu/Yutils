@@ -4,9 +4,9 @@
     },
     "editor.formatOnPaste": true,
     "editor.formatOnType": true,
-    "C_Cpp.errorSquiggles": "Disabled",
-    "C_Cpp.intelliSenseEngineFallback": "Disabled",
-    "C_Cpp.intelliSenseEngine": "Disabled",
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.intelliSenseEngineFallback": "disabled",
+    "C_Cpp.intelliSenseEngine": "disabled",
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceFolder}/build",
         "--log=verbose",
