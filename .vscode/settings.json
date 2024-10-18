@@ -1,4 +1,7 @@
 {
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
     "editor.formatOnPaste": true,
     "editor.formatOnType": true,
     "C_Cpp.errorSquiggles": "Disabled",
