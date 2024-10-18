@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
-#include <format>
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <stdexcept>

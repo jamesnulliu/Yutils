@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <format>
 #include <spdlog/spdlog.h>
 #include <string>
 #include <vector>
