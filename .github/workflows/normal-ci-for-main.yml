@@ -1,7 +1,48 @@
-# This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
-# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
-name: CMake on multiple platforms
+name: Clang Format Check and Auto-Fix
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
 
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install clang-format
+      run: sudo apt-get install clang-format
+
+    - name: Run clang-format
+      run: |
+        # Check if any file is not correctly formatted
+        # You can add specific file extensions or paths you want to format, e.g., '*.cpp', '*.h'
+        clang-format -i $(find . -name '*.cpp' -o -name '*.hpp')
+
+    - name: Check for uncommitted changes
+      id: format_check
+      run: |
+        # Check if clang-format introduced any changes
+        if [[ `git status --porcelain` ]]; then
+          echo "Files were not properly formatted. Trying to push the formatted changes."
+          echo "::set-output name=format_status::fail"
+        else
+          echo "All files are properly formatted."
+          echo "::set-output name=format_status::success"
+        fi
+
+    - name: Commit and push formatted changes
+      if: steps.format_check.outputs.format_status == 'fail'
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git add .
+        git commit -m "[skip ci] Auto-format code with clang-format"
+        git push
+
+name: CMake on Multiple Platforms
 on:
   push:
     branches: [ "main" ]
@@ -11,9 +52,6 @@ on:
     workflows: ["Clang Format Check and Auto-Fix"]
     types:
       - completed
-  # # Is this correct? 
-  # commit_message: "!.*\\[Skip CI\\].*"
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
