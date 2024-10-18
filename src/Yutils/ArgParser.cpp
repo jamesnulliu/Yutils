@@ -9,7 +9,8 @@
 
 namespace yutils
 {
-ArgParser::ArgParser(std::string_view argv0){
+ArgParser::ArgParser(std::string_view argv0)
+{
     m_logger = spdlog::stdout_color_mt("yutils::ArgParser");
 
     m_helpMessage =
