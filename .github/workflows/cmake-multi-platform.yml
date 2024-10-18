@@ -11,9 +11,8 @@ on:
     workflows: ["Clang Format Check and Auto-Fix"]
     types:
       - completed
-  paths-ignore:
-    - '.github/**'
-  commit_message: "!.*\[Skip CI\].*"
+  # # Is this correct? 
+  # commit_message: "!.*\\[Skip CI\\].*"
 
 jobs:
   build:
