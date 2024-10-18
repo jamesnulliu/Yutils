@@ -65,6 +65,7 @@ jobs:
         echo "SPDLOG_HOME=${{ github.workspace }}/spdlog-install" >> "$GITHUB_ENV"
 
     - name: Install spdlog
+      shell: bash
       run: |
         echo $SPDLOG_PROJECT_DIR
         echo $SPDLOG_HOME
@@ -80,10 +81,17 @@ jobs:
           -DCMAKE_INSTALL_PREFIX=$SPDLOG_HOME
         cmake --build ./build -j 8
         cmake --install ./build --prefix $SPDLOG_HOME
-      shell: bash
 
     - name: Configure CMake and Build
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      shell: bash
       run: >
         bash scripts/build-yutils.sh
+    
+    - name: Test ArgParser Windows
+      shell: bash
+      if: runner.os == 'Windows'
+      run: >
+        ./build/examples/ArgParserExample.exe
+      
