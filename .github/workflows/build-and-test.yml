@@ -4,11 +4,10 @@ on:
   #   branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-jobs:
 
+jobs:
   build:
     runs-on: ${{ matrix.os }}
-    needs: clang-format
     strategy:
       fail-fast: true
       matrix:
