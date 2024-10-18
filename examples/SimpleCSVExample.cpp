@@ -1,8 +1,8 @@
 #include <Yutils/SimpleCSV.hpp>
 #include <filesystem>
 #include <fstream>
-#include <vector>
 #include <spdlog/spdlog.h>
+#include <vector>
 
 using std::string_literals::operator""s;
 

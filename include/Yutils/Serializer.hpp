@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
+#include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <stdexcept>
@@ -47,13 +48,6 @@ public:
     {
         return DerivedT::template deserializeImpl<ObjT>(rawData);
     }
-
-    template <typename ObjT>
-    static void logRawTandObjT()
-    {
-        spdlog::error("RawT: {}", yutils::type_traits::typeName<RawT>());
-        spdlog::error("ObjT: {}", yutils::type_traits::typeName<ObjT>());
-    }
 };
 
 template <typename RawT>
@@ -89,8 +83,10 @@ public:
         }
         // ELSE: Unsupported type
         else {
-            logRawTandObjT<ObjT>();
-            static_assert(false, "Unsupported type for serialization.");
+            throw std::runtime_error(spdlog::fmt_lib::format(
+                "Unsupported type for serialization. RawT: {}, ObjT: {}.",
+                yutils::type_traits::typeName<std::vector<std::byte>>(),
+                yutils::type_traits::typeName<ObjT>()));
         }
     }
 
@@ -127,8 +123,10 @@ public:
         }
         // ELSE: Unsupported type
         else {
-            logRawTandObjT<ObjT>();
-            static_assert(false, "Unsupported type for deserialization.");
+            throw std::runtime_error(spdlog::fmt_lib::format(
+                "Unsupported type for deserialization. RawT: {}, ObjT: {}.",
+                yutils::type_traits::typeName<std::vector<std::byte>>(),
+                yutils::type_traits::typeName<ObjT>()));
         }
     }
 };

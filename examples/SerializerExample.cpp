@@ -134,7 +134,8 @@ std::vector<int> Serializer<std::vector<int>>::serializeImpl(const User& object)
 
 // Define the specialization for the template function `deserializeImpl`.
 template <>
-User Serializer<std::vector<int>>::deserializeImpl(const std::vector<int>& object)
+User Serializer<std::vector<int>>::deserializeImpl(
+    const std::vector<int>& object)
 {
     User user;
     user.name = std::string(object.begin(), object.begin() + sizeof(char) * 3);
