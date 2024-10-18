@@ -111,7 +111,11 @@ public:
         }
         // ELIF: Containers with heap-allocated memory
         else if constexpr (yutils::IsRange<ObjT>::value) {
-            if (rawData.size() % sizeof(typename ObjT::value_type) != 0) { throw std::runtime_error(spdlog::fmt_lib::format( "Size of data ({}B) is not a multiple of the size " "of the object ({}B) to be deserialized.", rawData.size(), sizeof(typename ObjT::value_type)));
+            if (rawData.size() % sizeof(typename ObjT::value_type) != 0) {
+                throw std::runtime_error(spdlog::fmt_lib::format(
+                    "Size of data ({}B) is not a multiple of the size "
+                    "of the object ({}B) to be deserialized.",
+                    rawData.size(), sizeof(typename ObjT::value_type)));
             }
             ObjT result(rawData.size() / sizeof(typename ObjT::value_type));
             std::memcpy(result.data(), rawData.data(), rawData.size());

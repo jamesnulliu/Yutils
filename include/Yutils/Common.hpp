@@ -19,7 +19,9 @@ namespace yutils
 constexpr std::string_view extractFilename(std::string_view path)
 {
     for (std::size_t i = path.size() - 1; i >= 0; --i) {
-        if (path[i] == '/' || path[i] == '\\') { return path.substr(i + 1); }
+        if (path[i] == '/' || path[i] == '\\') {
+            return path.substr(i + 1);
+        }
     }
     return path;
 }
