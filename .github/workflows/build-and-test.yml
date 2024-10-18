@@ -77,10 +77,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         
-    - name: Checkout the PR branch
+    - name: Checkout the PR Source branch
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.workflow_run.head_branch }}
+        ref: ${{ github.head_ref }}
         fetch-depth: 0
         
     - name: Install clang-format
@@ -110,4 +110,4 @@ jobs:
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
         git commit -am "[skip ci] Auto-format code with clang-format"
-        git push origin HEAD:${{ github.event.workflow_run.head_branch }}
+        git push origin HEAD:${{ github.head_ref }}
