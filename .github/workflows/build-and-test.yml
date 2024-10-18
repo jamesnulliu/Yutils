@@ -43,9 +43,6 @@ jobs:
       if: runner.os == 'Windows'
       run: choco install ninja
 
-    - name: Pull the new changes (if any, could be push in the previous workflow)
-      run: git pull origin main
-
     - name: Set reusable strings
       id: strings
       shell: bash
