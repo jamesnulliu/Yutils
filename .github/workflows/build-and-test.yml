@@ -1,0 +1,79 @@
+name: Build and Test
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: clang-format
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release]
+        c_compiler: [gcc, clang, cl]
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+          - os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+          - os: ubuntu-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
+          - os: ubuntu-latest
+            c_compiler: cl
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Ninja on Linux
+      if: runner.os == 'Linux'
+      run: sudo apt-get install ninja-build
+
+    - name: Install Ninja on Windows
+      if: runner.os == 'Windows'
+      run: choco install ninja
+
+    - name: Pull the new changes (if any, could be push in the previous workflow)
+      run: git pull origin main
+
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "SPDLOG_PROJECT_DIR=${{ github.workspace }}/spdlog" >> "$GITHUB_ENV"
+        echo "SPDLOG_HOME=${{ github.workspace }}/spdlog-install" >> "$GITHUB_ENV"
+
+    - name: Install spdlog
+      shell: bash
+      run: |
+        echo $SPDLOG_PROJECT_DIR
+        echo $SPDLOG_HOME
+        git clone https://github.com/gabime/spdlog.git $SPDLOG_PROJECT_DIR
+        cd $SPDLOG_PROJECT_DIR
+        cmake -G Ninja -B ./build -S . \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DSPDLOG_BUILD_SHARED=OFF \
+          -DSPDLOG_ENABLE_PCH=ON \
+          -DSPDLOG_BUILD_PIC=ON \
+          -DSPDLOG_USE_STD_FORMAT=OFF \
+          -DSPDLOG_BUILD_EXAMPLE=OFF \
+          -DCMAKE_INSTALL_PREFIX=$SPDLOG_HOME
+        cmake --build ./build -j 8
+        cmake --install ./build --prefix $SPDLOG_HOME
+
+    - name: Configure CMake and Build
+      shell: bash
+      run: >
+        bash scripts/build-yutils.sh
