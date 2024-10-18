@@ -14,8 +14,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-          ref: ${{ github.head_ref }}
 
     - name: Install clang-format
       run: sudo apt-get install clang-format
@@ -44,5 +42,5 @@ jobs:
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
         git commit -am "[skip ci] Auto-format code with clang-format"
-        git push origin HEAD:${{ github.head_ref }}
+        git push origin HEAD:${{ github.event.pull_request.base.ref }}
 
