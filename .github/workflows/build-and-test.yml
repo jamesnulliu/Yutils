@@ -104,10 +104,4 @@ jobs:
           echo "format_status=pass" >> $GITHUB_OUTPUT
         fi
 
-    - name: Commit and push formatted changes
-      if : ${{ steps.format_check.outputs.format_status == 'fail' }}
-      run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@github.com"
-        git commit -am "[skip ci] Auto-format code with clang-format"
-        git push origin HEAD:${{ github.head_ref }}
+
