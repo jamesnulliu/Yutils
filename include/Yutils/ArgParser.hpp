@@ -8,7 +8,8 @@
 #include "Yutils/Serializer.hpp"
 #include "Yutils/System.hpp"
 
-namespace yutils {
+namespace yutils
+{
 class ArgParser
 {
 public:
