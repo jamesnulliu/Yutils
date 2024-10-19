@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    if: ${{ !contains(join(github.event.commits.*.message), '[SKIP-CI]') }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -37,10 +38,6 @@ jobs:
       shell: bash
       run: |
         echo "Commit message: ${{ github.event.head_commit.message }}"
-        if [[ "${{ github.event.head_commit.message }}" == *"[SKIP-CI]"* ]]; then
-          echo "Skipping CI"
-          exit 0
-        fi 
     
     - name: Install Ninja on Linux
       if: runner.os == 'Linux'
@@ -82,7 +79,7 @@ jobs:
         bash scripts/build-yutils.sh
         
   clang-format:
-    if: "!contains(github.event.head_commit.message, '[SKIP-CI]')"
+    if: ${{ !contains(join(github.event.commits.*.message), '[SKIP-CI]') }}
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -98,10 +95,6 @@ jobs:
       shell: bash
       run: |
         echo "Commit message: ${{ github.event.head_commit.message }}"
-        if [[ "${{ github.event.head_commit.message }}" == *"[SKIP-CI]"* ]]; then
-          echo "Skipping CI"
-          exit 0
-        fi 
         
     - name: Install clang-format
       run: sudo apt-get install clang-format
