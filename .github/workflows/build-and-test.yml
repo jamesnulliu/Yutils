@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    if: github.actor != 'github-actions[bot][formatter]'
+    if: github.actor != 'github-actions[bot]'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -74,7 +74,7 @@ jobs:
         bash scripts/build-yutils.sh
         
   clang-format:
-    if: github.actor != 'github-actions[bot][formatter]'
+    if: github.actor != 'github-actions[bot]'
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -84,6 +84,7 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
         fetch-depth: 0
+        token: ${{ secrets.PAT }}
         
     - name: Install clang-format
       run: sudo apt-get install clang-format
@@ -109,8 +110,8 @@ jobs:
     - name: Commit and push formatted changes
       if : ${{ steps.format_check.outputs.format_status == 'fail' }}
       run: |
-        git config --global user.name "github-actions[bot][formatter]"
-        git config --global user.email "github-actions[bot][formatter]@github.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@github.com"
         git commit -am "Auto-format code with clang-format"
         git push origin HEAD:${{ github.head_ref }}
 
