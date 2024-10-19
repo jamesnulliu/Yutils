@@ -7,8 +7,7 @@
 #include "Yutils/ArgParser.hpp"
 #include "Yutils/Common.hpp"
 
-namespace yutils
-{
+namespace yutils {
 ArgParser::ArgParser(std::string_view argv0)
 {
     m_logger = spdlog::stdout_color_mt("yutils::ArgParser");
