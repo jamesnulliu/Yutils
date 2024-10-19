@@ -74,7 +74,7 @@ jobs:
         bash scripts/build-yutils.sh
         
   clang-format:
-    if: github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot][formatter]'
     needs: [build]
     runs-on: ubuntu-latest
     steps:
