@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     spdlog::set_level(spdlog::level::trace);
     spdlog::info("argc: {}", argc);
     for (int i = 0; i < argc; ++i) {
-        spdlog::info("argv[{}]: {}", i, argv[i]);
+spdlog::info("argv[{}]: {}", i, argv[i]);
     }
 
     yutils::ArgParser argParser(argv[0]);
