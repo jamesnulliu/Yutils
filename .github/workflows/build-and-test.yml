@@ -4,45 +4,34 @@ on:
     branches: [ "main" ]
 
 jobs:
-  check_commit:
+  check_last_commit:
     runs-on: ubuntu-latest
     outputs:
       skip: ${{ steps.check_commit.outputs.skip }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Get last commit
-        id: last_commit
-        uses: actions/github-script@v6
+      - name: Switch to the PR Source branch
+        uses: actions/checkout@v4
         with:
-          script: |
-            const commit = await github.rest.repos.getCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: context.sha
-            });
-            return commit.data.commit;
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
-      - name: Check commit author or message
-        id: check_commit
+      - name: Whether to Skip CI
         shell: bash
         run: |
-          echo "Commit author: ${{ steps.last_commit.outputs.author.name }}"
-          echo "Commit message: ${{ steps.last_commit.outputs.message }}"
-          # if (${{ steps.last_commit.outputs.author.name }} == 'specific-user' || ${{ steps.last_commit.outputs.message }}.includes('specific-keyword')) {
-          #   echo "::set-output name=skip::true"
-          # } else {
-          #   echo "::set-output name=skip::false"
-          # }
-          if (${{ steps.last_commit.outputs.message }}.includes('[SKIP-CI]')) {
+          last_commit_user=$(git log -1 --pretty=format:'%an')
+          last_commit_email=$(git log -1 --pretty=format:'%ae')
+          last_commit_message=$(git log -1 --pretty=format:'%s')
+          echo "Last Commit User: $last_commit_user"
+          echo "Last Commit Email: $last_commit_email"
+          echo "Last Commit Message: $last_commit_message"
+          if [[ "$last_commit_message" == *"[SKIP-CI]"* ]]; then {
             echo "::set-output name=skip::true"
           } else {
             echo "::set-output name=skip::false"
           }
 
   build:
-    needs: check_commit
+    needs: check_last_commit
     if: ${{ needs.check_commit.outputs.skip }} != 'true'
     runs-on: ${{ matrix.os }}
     strategy:
@@ -117,12 +106,12 @@ jobs:
         bash scripts/build-yutils.sh
         
   clang-format:
-    needs: [check_commit, build]
+    needs: [check_last_commit, build]
     if: ${{ needs.check_commit.outputs.skip }} != 'true'
     runs-on: ubuntu-latest
     steps:
         
-    - name: Checkout the PR Source branch
+    - name: Switch to the PR Source branch
       uses: actions/checkout@v4
       with:
         ref: ${{ github.head_ref }}
