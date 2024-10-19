@@ -25,7 +25,7 @@ jobs:
           echo "Last Commit Email: $last_commit_email"
           last_commit_message=$(git log -1 --pretty=format:'%s')
           echo "Last Commit Message: $last_commit_message"
-          if [[ "$last_commit_message" == *"[SKIP-CI]"* ]]; then 
+          if [[ "$last_commit_message" == *"[SKIP CI]"* ]]; then 
             echo "CI should be skipped."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else 
@@ -63,9 +63,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Log skip
-      run: echo "Skip CI? ${{ needs.check_last_commit.outputs.skip }}"
     
     - name: Install Ninja on Linux
       if: runner.os == 'Linux'
@@ -145,6 +142,6 @@ jobs:
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@github.com"
-        git commit -am "[SKIP-CI] Auto-format code with clang-format"
+        git commit -am "[SKIP CI] Auto-format code with clang-format"
         git push origin HEAD:${{ github.head_ref }}
 
