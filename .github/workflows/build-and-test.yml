@@ -7,7 +7,7 @@ jobs:
   check_last_commit:
     runs-on: ubuntu-latest
     outputs:
-      skip: ${{ steps.check_last_commit.outputs.skip }}
+      skip: ${{ steps.whether_to_skip_ci.outputs.skip }}
     steps:
       - name: Switch to the PR Source branch
         uses: actions/checkout@v4
@@ -16,6 +16,7 @@ jobs:
           fetch-depth: 0
 
       - name: Whether to Skip CI
+        id: whether_to_skip_ci
         shell: bash
         run: |
           last_commit_user=$(git log -1 --pretty=format:'%an')
@@ -62,6 +63,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    # - name: Log skip
+    #   run: echo "Skip CI? ${{ needs.check_last_commit.outputs.skip }}"
     
     - name: Install Ninja on Linux
       if: runner.os == 'Linux'
@@ -114,11 +118,6 @@ jobs:
         ref: ${{ github.head_ref }}
         fetch-depth: 0
         token: ${{ secrets.PAT }}
-
-    - name: Check commit message
-      shell: bash
-      run: |
-        echo "Commit message: ${{ github.event.head_commit.message }}"
         
     - name: Install clang-format
       run: sudo apt-get install clang-format
