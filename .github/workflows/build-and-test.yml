@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    if: github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot][formatter]'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -109,6 +109,8 @@ jobs:
     - name: Commit and push formatted changes
       if : ${{ steps.format_check.outputs.format_status == 'fail' }}
       run: |
+        git config --global user.name "github-actions[bot][formatter]"
+        git config --global user.email "github-actions[bot][formatter]@github.com"
         git commit -am "[skip ci] Auto-format code with clang-format"
         git push origin HEAD:${{ github.head_ref }}
 
