@@ -53,6 +53,7 @@ jobs:
     - name: Install spdlog
       shell: bash
       run: |
+        echo ${{ github.event.head_commit.message }}
         echo $SPDLOG_PROJECT_DIR
         echo $SPDLOG_HOME
         git clone https://github.com/gabime/spdlog.git $SPDLOG_PROJECT_DIR
@@ -91,6 +92,7 @@ jobs:
 
     - name: Run clang-format
       run: |
+        echo ${{ github.event.head_commit.message }}
         # Check if any file is not correctly formatted
         # You can add specific file extensions or paths you want to format, e.g., '*.cpp', '*.h'
         clang-format -i $(find . -name '*.cpp' -o -name '*.hpp' -o -name '*.h' -o -name '*.c')
