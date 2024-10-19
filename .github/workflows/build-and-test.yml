@@ -26,6 +26,7 @@ jobs:
 
       - name: Check commit author or message
         id: check_commit
+        shell: bash
         run: |
           echo "Commit author: ${{ steps.last_commit.outputs.author.name }}"
           echo "Commit message: ${{ steps.last_commit.outputs.message }}"
