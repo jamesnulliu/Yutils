@@ -24,11 +24,11 @@ jobs:
           echo "Last Commit User: $last_commit_user"
           echo "Last Commit Email: $last_commit_email"
           echo "Last Commit Message: $last_commit_message"
-          if [[ "$last_commit_message" == *"[SKIP-CI]"* ]]; then {
+          if [[ "$last_commit_message" == *"[SKIP-CI]"* ]]; then 
             echo "::set-output name=skip::true"
-          } else {
+          else 
             echo "::set-output name=skip::false"
-          }
+          fi
 
   build:
     needs: check_last_commit
