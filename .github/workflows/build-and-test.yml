@@ -5,7 +5,6 @@ on:
 
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, '[SKIP-CI]')"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -33,6 +32,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Check commit message
+      run: |
+        echo "Commit message: ${{ github.event.head_commit.message }}"
+        if [[ "${{ github.event.head_commit.message }}" == *"[SKIP-CI]"* ]]; then
+          echo "Skipping CI"
+          exit 0
+        fi 
     
     - name: Install Ninja on Linux
       if: runner.os == 'Linux'
@@ -53,7 +60,6 @@ jobs:
     - name: Install spdlog
       shell: bash
       run: |
-        echo ${{ github.event.head_commit.message }}
         echo $SPDLOG_PROJECT_DIR
         echo $SPDLOG_HOME
         git clone https://github.com/gabime/spdlog.git $SPDLOG_PROJECT_DIR
@@ -86,13 +92,20 @@ jobs:
         ref: ${{ github.head_ref }}
         fetch-depth: 0
         token: ${{ secrets.PAT }}
+
+    - name: Check commit message
+      run: |
+        echo "Commit message: ${{ github.event.head_commit.message }}"
+        if [[ "${{ github.event.head_commit.message }}" == *"[SKIP-CI]"* ]]; then
+          echo "Skipping CI"
+          exit 0
+        fi 
         
     - name: Install clang-format
       run: sudo apt-get install clang-format
 
     - name: Run clang-format
       run: |
-        echo ${{ github.event.head_commit.message }}
         # Check if any file is not correctly formatted
         # You can add specific file extensions or paths you want to format, e.g., '*.cpp', '*.h'
         clang-format -i $(find . -name '*.cpp' -o -name '*.hpp' -o -name '*.h' -o -name '*.c')
