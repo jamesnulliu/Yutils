@@ -3,7 +3,9 @@
 
 namespace yutils
 {
-SimpleCSV::SimpleCSV(size_t numColumns) : m_numColumns(numColumns){}
+SimpleCSV::SimpleCSV(size_t numColumns) : m_numColumns(numColumns)
+{
+}
 
 SimpleCSV::~SimpleCSV()
 {
