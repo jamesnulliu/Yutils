@@ -32,11 +32,10 @@ jobs:
             echo "CI should not be skipped."
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
-          echo "Skip CI? ${{ steps.whether_to_skip_ci.outputs.skip }}"
 
   build:
     needs: check_last_commit
-    if: ${{ needs.check_last_commit.outputs.skip }} != 'true'
+    if: ${{ needs.check_last_commit.outputs.skip }} != true
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -109,7 +108,7 @@ jobs:
         
   clang-format:
     needs: [check_last_commit, build]
-    if: ${{ needs.check_last_commit.outputs.skip }} != 'true'
+    if: ${{ needs.check_last_commit.outputs.skip }} != true
     runs-on: ubuntu-latest
     steps:
         
