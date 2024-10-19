@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -73,6 +74,7 @@ jobs:
         bash scripts/build-yutils.sh
         
   clang-format:
+    if: github.actor != 'github-actions[bot]'
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -103,5 +105,10 @@ jobs:
           echo "All files are properly formatted."
           echo "format_status=pass" >> $GITHUB_OUTPUT
         fi
-
+        
+    - name: Commit and push formatted changes
+      if : ${{ steps.format_check.outputs.format_status == 'fail' }}
+      run: |
+        git commit -am "[skip ci] Auto-format code with clang-format"
+        git push origin HEAD:${{ github.head_ref }}
 
