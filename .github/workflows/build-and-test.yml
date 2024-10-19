@@ -32,6 +32,7 @@ jobs:
             echo "CI should not be skipped."
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
+          echo "Skip CI? ${{ steps.whether_to_skip_ci.outputs.skip }}"
 
   build:
     needs: check_last_commit
@@ -64,8 +65,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # - name: Log skip
-    #   run: echo "Skip CI? ${{ needs.check_last_commit.outputs.skip }}"
+    - name: Log skip
+      run: echo "Skip CI? ${{ needs.check_last_commit.outputs.skip }}"
     
     - name: Install Ninja on Linux
       if: runner.os == 'Linux'
