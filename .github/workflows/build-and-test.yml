@@ -140,8 +140,8 @@ jobs:
     - name: Commit and push formatted changes
       if : ${{ steps.format_check.outputs.format_status == 'fail' }}
       run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@github.com"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git commit -am "[SKIP CI] Auto-format code with clang-format"
         git push origin HEAD:${{ github.head_ref }}
 
