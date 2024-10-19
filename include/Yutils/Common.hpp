@@ -7,8 +7,7 @@
 #include "Yutils/Concepts.hpp"
 #include "Yutils/System.hpp"
 
-namespace yutils
-{
+namespace yutils     {
 
 /**
  * @brief Extract the filename from a path.
