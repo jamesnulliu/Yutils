@@ -18,7 +18,8 @@ ArgParser::ArgParser(std::string_view argv0)
     // Add the executable name to the help message.
     m_options["--help"] = {"Show help messages.", "yutils::Argparser::flag_t", "false"};
 
-    m_helpMessage += generateHelpMessage("--help", m_options["--help"]);
+    m_helpMessage +=
+        generateHelpMessage("--help", m_options["--help"]);
 };
 
 void ArgParser::addOption(const std::string& optName, const std::string& type,
