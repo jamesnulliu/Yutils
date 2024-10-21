@@ -22,8 +22,7 @@ ArgParser::ArgParser(std::string_view argv0)
         generateHelpMessage("--help", m_options["--help"]);
 };
 
-void ArgParser::addOption(const std::string& optName, const std::string& type,
-                          const std::string& description,
+void ArgParser::addOption(const std::string& optName, const std::string& type, const std::string& description,
                           std::optional<std::string> defaultValue)
 {
     using spdlog::fmt_lib::format;
