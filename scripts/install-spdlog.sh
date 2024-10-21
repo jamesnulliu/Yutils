@@ -34,21 +34,13 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-echo "Building spdlog from source, params:"
-echo "  Project Dir: $SpdlogProjectDir"
-echo "  Install Dir: $SpdlogInstallDir"
-echo "  Build Type: $BuildType"
-echo "  Build Shared Libs: $BuildSharedLibs"
-echo "  Build Example: $BuildExample"
-echo "  Use Std Format: $UseStdFormat"
-
-# Read user input: Yes or No? and Enter
-read -p "Continue? (y/N): " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    exit 1
+# If the project directory does not exist, clone it from the repo
+if [ ! -d "$SpdlogProjectDir" ]; then
+    echo -e "\033[0;32mCloning spdlog...\033[0m"
+    git clone https://github.com/gabime/spdlog.git $SPDLOG_PROJECT_DIR
 fi
 
+echo -e "\033[0;32mBuilding spdlog...\033[0m"
 
 pushd $SpdlogProjectDir
     rm -rf build
@@ -66,5 +58,14 @@ pushd $SpdlogProjectDir
     rm -rf $SpdlogInstallDir
 
     cmake --install ./build --prefix $SpdlogInstallDir
-
 popd
+
+echo -e "\033[0;32mFinished building spdlog.\033[0m"
+
+echo "Configuration:"
+echo "  Project Dir: $SpdlogProjectDir"
+echo "  Install Dir: $SpdlogInstallDir"
+echo "  Build Type: $BuildType"
+echo "  Build Shared Libs: $BuildSharedLibs"
+echo "  Build Example: $BuildExample"
+echo "  Use Std Format: $UseStdFormat"
