@@ -1,4 +1,4 @@
-name: "[CI] Build, Test, and Format for PR"
+name: "[CI] Build, Test, and Format"
 on:
   pull_request:
     branches: [ "main" ]
