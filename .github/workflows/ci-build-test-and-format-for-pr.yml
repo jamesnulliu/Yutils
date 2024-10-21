@@ -114,7 +114,7 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
         fetch-depth: 0
-        token: ${{ secrets.PAT }}
+        # token: ${{ secrets.PAT }}
         
     - name: Install clang-format
       run: sudo apt-get install clang-format
