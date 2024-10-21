@@ -15,7 +15,6 @@ template <typename T>
 struct IsRange<T, std::void_t<decltype(std::begin(std::declval<T>())),
                               decltype(std::end(std::declval<T>()))>>
     : std::true_type
-{
-};
+{    };
 
 }  // namespace yutils
