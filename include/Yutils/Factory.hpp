@@ -17,7 +17,8 @@ template <bool threadSafe, typename KeyT, typename ValT,
 class Registry
 {
 public:
-    explicit Registry() = default; Registry& operator=(const Registry&) = delete;
+    explicit Registry() = default;
+    Registry& operator=(const Registry&) = delete;
 
 public:
     void add(const KeyT& key, const ValT& val)
