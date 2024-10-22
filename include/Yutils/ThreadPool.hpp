@@ -1128,8 +1128,14 @@ private:
      */
     void create_threads(const std::function<void()>& init_task)
     {
-        { const std::scoped_lock kTasksLock(tasks_mutex); tasks_running = thread_count; workers_running = true; }
-        for (concurrency_t i = 0; i < thread_count; ++i) { threads[i] = std::thread(&ThreadPool::worker, this, i, init_task); }
+        {
+            const std::scoped_lock kTasksLock(tasks_mutex);
+            tasks_running = thread_count;
+            workers_running = true;
+        }
+        for (concurrency_t i = 0; i < thread_count; ++i) {
+            threads[i] = std::thread(&ThreadPool::worker, this, i, init_task);
+        }
     }
 
     /**
