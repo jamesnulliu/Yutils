@@ -6,41 +6,7 @@ on:
       - main
   
 jobs:
-  check_last_commit:
-    runs-on: ubuntu-latest
-
-    outputs:
-      skip: ${{ steps.whether_to_skip_ci.outputs.skip }}
-
-    steps:
-      - name: Switch to main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Whether to Skip CI
-        id: whether_to_skip_ci
-        shell: bash
-        run: |
-          last_commit_user=$(git log -1 --pretty=format:'%an')
-          echo "Last Commit User: $last_commit_user"
-          last_commit_email=$(git log -1 --pretty=format:'%ae')
-          echo "Last Commit Email: $last_commit_email"
-          last_commit_message=$(git log -1 --pretty=format:'%s')
-          echo "Last Commit Message: $last_commit_message"
-
-          if [[ "$last_commit_message" == *"[skip ci]"* ]]; then 
-            echo "CI should be skipped."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else 
-            echo "CI should not be skipped."
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
-
   clang-format:
-    needs: [check_last_commit]
-    if: ${{ needs.check_last_commit.outputs.skip != 'true' }} 
     runs-on: ubuntu-latest
 
     steps:
@@ -49,7 +15,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.PAT || github.token }}
 
       - name: Install clang-format
         run: sudo apt-get install clang-format
@@ -61,7 +27,7 @@ jobs:
                             -o -name '*.cpp' -o -name '*.hpp'  \
                             -o -name '*.cu' -o -name '*.cuh')
       
-      - name: Check for uncommitted changes
+      - name: Check for Uncommitted Changes
         id: format_check
         run: |
           # Check if clang-format introduced any changes
@@ -73,10 +39,10 @@ jobs:
             echo "format_status=pass" >> $GITHUB_OUTPUT
           fi
 
-      - name: Commit and push formatted changes
+      - name: Commit and Push to main
         if : ${{ steps.format_check.outputs.format_status == 'fail' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "[skip ci] Auto-format code with clang-format"
-          git push origin HEAD:main
+          git push origin main
