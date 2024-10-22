@@ -1,4 +1,3 @@
-
 SpdlogProjectDir=${SPDLOG_PROJECT_DIR}
 SpdlogInstallDir=${SPDLOG_HOME}
 BuildType=Release

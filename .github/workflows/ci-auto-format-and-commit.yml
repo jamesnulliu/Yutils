@@ -1,4 +1,4 @@
-name: Auto Format and Commit
+name: "[CI] Auto Format and Commit"
 
 on:
   push:
@@ -6,7 +6,41 @@ on:
       - main
   
 jobs:
+  check_last_commit:
+    runs-on: ubuntu-latest
+
+    outputs:
+      skip: ${{ steps.whether_to_skip_ci.outputs.skip }}
+
+    steps:
+      - name: Switch to main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Whether to Skip CI
+        id: whether_to_skip_ci
+        shell: bash
+        run: |
+          last_commit_user=$(git log -1 --pretty=format:'%an')
+          echo "Last Commit User: $last_commit_user"
+          last_commit_email=$(git log -1 --pretty=format:'%ae')
+          echo "Last Commit Email: $last_commit_email"
+          last_commit_message=$(git log -1 --pretty=format:'%s')
+          echo "Last Commit Message: $last_commit_message"
+
+          if [[ "$last_commit_message" == *"[skip ci]"* ]]; then 
+            echo "CI should be skipped."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else 
+            echo "CI should not be skipped."
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
   clang-format:
+    needs: [check_last_commit]
+    if: ${{ needs.check_last_commit.outputs.skip != 'true' }} 
     runs-on: ubuntu-latest
 
     steps:
