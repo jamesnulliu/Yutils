@@ -1,0 +1,48 @@
+name: Auto Format and Commit
+
+on:
+  push:
+    branches:
+      - main
+  
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Switch to main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.PAT }}
+
+      - name: Install clang-format
+        run: sudo apt-get install clang-format
+
+      - name: Run clang-format
+        run: | 
+          clang-format -i $(find .  \
+                            -name '*.c' -o -name '*.h'  \
+                            -o -name '*.cpp' -o -name '*.hpp'  \
+                            -o -name '*.cu' -o -name '*.cuh')
+      
+      - name: Check for uncommitted changes
+        id: format_check
+        run: |
+          # Check if clang-format introduced any changes
+          if [[ `git status --porcelain` ]]; then
+            echo "Files were not properly formatted. The changes will be pushed to branch main."
+            echo "format_status=fail" >> $GITHUB_OUTPUT
+          else
+            echo "All files are properly formatted."
+            echo "format_status=pass" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push formatted changes
+        if : ${{ steps.format_check.outputs.format_status == 'fail' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "[CI][skip ci] Auto-format code with clang-format"
+          git push origin HEAD:${{ github.head_ref }}
