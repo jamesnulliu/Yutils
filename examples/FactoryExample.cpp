@@ -15,7 +15,8 @@ yutils::Registry<false, std::string, std::function<void()>> helloFnRegistry;
 class CartoonCharacter
 {
 public:
-    explicit CartoonCharacter() = default; CartoonCharacter& operator=(const CartoonCharacter&) = delete;
+    explicit CartoonCharacter() = default;
+    CartoonCharacter& operator=(const CartoonCharacter&) = delete;
     virtual ~CartoonCharacter() = default;
 
 public:
