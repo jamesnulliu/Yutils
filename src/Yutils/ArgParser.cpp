@@ -13,8 +13,7 @@ ArgParser::ArgParser(std::string_view argv0)
 {
     m_logger = spdlog::stdout_color_mt("yutils::ArgParser");
 
-    m_helpMessage =
-        spdlog::fmt_lib::format("Usage:\n    {} [options...]\nOptions:\n",
+    m_helpMessage =spdlog::fmt_lib::format("Usage:\n    {} [options...]\nOptions:\n",
                                 yutils::extractFilename(argv0));
 
     // Add the executable name to the help message.
