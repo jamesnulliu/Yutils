@@ -14,9 +14,7 @@ SimpleCSV::~SimpleCSV()
 void SimpleCSV::resizeCol(size_t numColumns)
 {
     m_numColumns = numColumns;
-    for (auto& row : m_buffer) {
-        row.resize(numColumns);
-    }
+    for (auto& row : m_buffer) { row.resize(numColumns); }
 }
 
 void SimpleCSV::insertRow(std::size_t rowIdx,
