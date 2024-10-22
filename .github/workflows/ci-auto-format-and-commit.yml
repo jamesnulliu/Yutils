@@ -79,4 +79,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "[CI][skip ci] Auto-format code with clang-format"
-          git push origin HEAD:${{ github.head_ref }}
+          git push origin HEAD:main
