@@ -41,10 +41,3 @@ add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
 set(EXAMPLE_NAME FactoryExample)
 add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
 # ==============================================================================
-
-# ==============================================================================
-# ThreadPool Example
-# ------------------------------------------------------------------------------
-set(EXAMPLE_NAME ThreadPoolExample)
-add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
-# ==============================================================================
