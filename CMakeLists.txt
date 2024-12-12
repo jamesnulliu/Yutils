@@ -4,22 +4,25 @@ cmake_minimum_required(VERSION 3.21)
 # Project name
 project(Yutils VERSION 1.1.0)
 
-set(YUTILS_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+# Common utility functions:
+include(${PROJECT_SOURCE_DIR}/cmake/utils/common.cmake)
 
-# Some Logger functions --------------------------------------------------------
-include(${YUTILS_PROJECT_DIR}/cmake/Logging.cmake)
+set_default_values(
+    YUTILS_BUILD_EXAMPLES ON 
+    PROJECT_NAMESPACE "Yutils::"
+)
 
-# Arguments --------------------------------------------------------------------
-include(${YUTILS_PROJECT_DIR}/cmake/Arguments.cmake)
+# Utility functions for installing libraries:
+include(${PROJECT_SOURCE_DIR}/cmake/utils/lib-install.cmake)
 
-# Compiler and Linker Configurations -------------------------------------------
-include(${YUTILS_PROJECT_DIR}/cmake/Compiler.cmake)
+# Compiler configurations for cpp, e.g., g++, clang++, msvc(cl), etc.
+include(${PROJECT_SOURCE_DIR}/cmake/compilers/cxx-compiler-configs.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/libraries/libspdlog.cmake)
 
-# Library Install Utilities ----------------------------------------------------
-include(${YUTILS_PROJECT_DIR}/cmake/InstallLibraries.cmake)
+set(CMAKE_EXECUTABLE_SUFFIX ".exe")
 
 # Yutils library ---------------------------------------------------------------
-add_subdirectory(src)
+add_subdirectory(lib)
 
 # Examples ---------------------------------------------------------------------
 if(YUTILS_BUILD_EXAMPLES)

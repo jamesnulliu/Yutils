@@ -32,14 +32,9 @@
 *.app
 
 # CMake Build Directory
-build/*
-
-# Output Directory
-**/bin/*
-lib/*
+build
 
 results/*
-
 .cache/*
 
 # Default Install Directory

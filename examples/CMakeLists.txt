@@ -2,8 +2,6 @@
 # @file examples/CMakeLists.txt
 # ==============================================================================
 
-find_package(spdlog REQUIRED PATHS ${SPDLOG_HOME})
-
 link_libraries(Yutils::Yutils)
 
 # ==============================================================================
@@ -11,7 +9,7 @@ link_libraries(Yutils::Yutils)
 # ------------------------------------------------------------------------------
 set(EXAMPLE_NAME ArgParserExample)
 add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
-yutils_log_info("${YUTILS_LOG_CYAN_CAT} Target: ${EXAMPLE_NAME}")
+log_info("${YUTILS_LOG_CYAN_CAT} Target: ${EXAMPLE_NAME}")
 # ==============================================================================
 
 # ==============================================================================

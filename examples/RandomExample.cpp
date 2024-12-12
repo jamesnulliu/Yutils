@@ -45,16 +45,6 @@ int main(int argc, char* argv[])
     yutils::RandNormal<double> randNormal;
     yutils::RandUniform<double> randUniform;
 
-    auto genRandNumber = [&]() {
-        if (distribution == "uniform") {
-            return randUniform.generate(dParam1, dParam2);
-        } else if (distribution == "normal") {
-            return randNormal.generate(dParam1, dParam2);
-        } else {
-            throw std::runtime_error("Unknown distribution: " + distribution);
-        }
-    };
-
     auto genRandVec = [&](std::size_t num) {
         if (distribution == "uniform") {
             return randUniform.generateVec(num, dParam1, dParam2);
