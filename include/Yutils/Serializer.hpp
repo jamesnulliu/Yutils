@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
-#include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <stdexcept>
