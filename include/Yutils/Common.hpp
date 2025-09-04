@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstddef>
 #include <string_view>
+#include <cstdint>
 
 #include "Yutils/Concepts.hpp"
 #include "Yutils/System.hpp"
@@ -18,7 +19,7 @@ namespace yutils
  */
 constexpr std::string_view extractFilename(std::string_view path)
 {
-    for (std::size_t i = path.size(); i != 0; --i) {
+    for (std::size_t i = path.size() - 1; i != 0; --i) {
         if (path[i] == '/' || path[i] == '\\') {
             return path.substr(i + 1);
         }
