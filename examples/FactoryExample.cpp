@@ -55,7 +55,7 @@ public:
     }
 };
 
-int main(int argc, char* argv[])
+int main()
 {
 
     spdlog::set_level(spdlog::level::info);

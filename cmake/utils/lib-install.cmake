@@ -1,12 +1,12 @@
+include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-# ==============================================================================
 # @breif Install target libraries
-function(yutils_install_libraries LIB_COMPONENT LIB_NAMESPACE LIB_LIST)
-    yutils_log_info("Install libraries...")
-    yutils_log_info("|- Component: ${LIB_COMPONENT}")
-    yutils_log_info("|- Namespace: ${LIB_NAMESPACE}")
-    yutils_log_info("|- Library Targets: [ ${LIB_LIST} ]")
+function(install_libraries LIB_COMPONENT LIB_NAMESPACE LIB_LIST)
+    log_info("Libraries to install:")
+    log_info("|- Component: ${LIB_COMPONENT}")
+    log_info("|- Namespace: ${LIB_NAMESPACE}")
+    log_info("|- Library Targets: [ ${LIB_LIST} ]")
 
     # Install libraries
     install(
@@ -31,7 +31,7 @@ function(yutils_install_libraries LIB_COMPONENT LIB_NAMESPACE LIB_LIST)
         EXPORT ${LIB_COMPONENT}Targets
         COMPONENT ${LIB_COMPONENT}
         FILE ${LIB_COMPONENT}Targets.cmake
-        NAMESPACE ${LIB_NAMESPACE}::
+        NAMESPACE ${LIB_NAMESPACE}
         DESTINATION lib/cmake/${LIB_COMPONENT}
     )
 
@@ -44,7 +44,7 @@ function(yutils_install_libraries LIB_COMPONENT LIB_NAMESPACE LIB_LIST)
 
     # Generate and install config file
     configure_package_config_file(
-        ${PROJECT_SOURCE_DIR}/cmake/${LIB_COMPONENT}Config.cmake.in
+        ${PROJECT_SOURCE_DIR}/cmake/config.cmake.in/${LIB_COMPONENT}Config.cmake.in
         ${CMAKE_CURRENT_BINARY_DIR}/${LIB_COMPONENT}Config.cmake
         INSTALL_DESTINATION lib/cmake/${LIB_COMPONENT}
     )

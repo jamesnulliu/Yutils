@@ -12,7 +12,7 @@
 
 namespace yutils
 {
-template <bool threadSafe, typename KeyT, typename ValT,
+template <bool THREAD_SAFE, typename KeyT, typename ValT,
           typename MapT = std::unordered_map<KeyT, ValT>>
 class Registry
 {
@@ -23,7 +23,7 @@ public:
 public:
     void add(const KeyT& key, const ValT& val)
     {
-        if constexpr (threadSafe) {
+        if constexpr (THREAD_SAFE) {
             std::unique_lock<std::shared_mutex> lock(m_mutex);
         }
         m_mapper.emplace(key, val);
@@ -31,7 +31,7 @@ public:
 
     void remove(const KeyT& key)
     {
-        if constexpr (threadSafe) {
+        if constexpr (THREAD_SAFE) {
             std::unique_lock<std::shared_mutex> lock(m_mutex);
         }
         m_mapper.erase(key);
@@ -39,7 +39,7 @@ public:
 
     ValT get(const KeyT& key) const
     {
-        if constexpr (threadSafe) {
+        if constexpr (THREAD_SAFE) {
             std::shared_lock<std::shared_mutex> lock(m_mutex);
         }
         auto it = m_mapper.find(key);
@@ -50,7 +50,7 @@ public:
     }
 
 private:
-    std::conditional_t<threadSafe, std::shared_mutex, std::monostate> m_mutex;
+    std::conditional_t<THREAD_SAFE, std::shared_mutex, std::monostate> m_mutex;
     MapT m_mapper;
 };
 
