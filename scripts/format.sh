@@ -1,5 +1,5 @@
 # [NOTE] 
-# |- This script is used to format the code using clang-format and black.
+# |- This script is used to format the code using clang-format and ruff.
 # |- Although CI pipeline is configured to format the code after pushing to main,
 # |- it is still recommended to run this script manually before committing the code.
 
@@ -8,6 +8,7 @@ set -e  # Exit on error
 FORMAT_C_CXX=false
 FORMAT_PYTHON=false
 CLANG_FORMAT_CONFIG=".clang-format"
+RUFF_CONFIG="ruff.toml"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -17,6 +18,8 @@ while [[ $# -gt 0 ]]; do
             FORMAT_PYTHON=true ;;
         --clang-format-config=*)
             CLANG_FORMAT_CONFIG="${1#*=}" ;;
+        --ruff-config=*)
+            RUFF_CONFIG="${1#*=}" ;;
         *)
             # [TODO] Add detailed help message
             echo "Unknown argument: $1"; exit 1 ;;
@@ -40,7 +43,7 @@ if [[ "$FORMAT_PYTHON" == "true" ]]; then
     echo "Formatting Python files..."
     files=$(git ls-files '*.py')
     if [[ -n "$files" ]]; then
-        black --quiet --fast $files
+        ruff format --config $RUFF_CONFIG $files
     fi
 fi
 

@@ -2,7 +2,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 # @breif Install target libraries
-function(yutils_install_libraries LIB_COMPONENT LIB_NAMESPACE LIB_LIST)
+function(install_libraries LIB_COMPONENT LIB_NAMESPACE LIB_LIST)
     log_info("Install libraries...")
     log_info("|- Component: ${LIB_COMPONENT}")
     log_info("|- Namespace: ${LIB_NAMESPACE}")

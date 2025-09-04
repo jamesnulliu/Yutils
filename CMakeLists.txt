@@ -12,19 +12,19 @@ set(YUTILS_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 # Some Logger functions --------------------------------------------------------
 include(${YUTILS_PROJECT_DIR}/cmake/utils/logging.cmake)
 
-# Arguments --------------------------------------------------------------------
-include(${YUTILS_PROJECT_DIR}/cmake/arguments.cmake)
-
 # Compiler and Linker Configurations -------------------------------------------
 include(${YUTILS_PROJECT_DIR}/cmake/compiler.cmake)
 
 # Library Install Utilities ----------------------------------------------------
-include(${YUTILS_PROJECT_DIR}/cmake/lib-install.cmake)
+include(${YUTILS_PROJECT_DIR}/cmake/utils/lib-install.cmake)
 
 # Yutils library ---------------------------------------------------------------
+find_package(spdlog CONFIG REQUIRED)
 add_subdirectory(lib)
 
 # Examples ---------------------------------------------------------------------
+option(YUTILS_BUILD_EXAMPLES "Whether to build the examples" ON)
+log_info("|- Build Examples: ${YUTILS_BUILD_EXAMPLES}")
 if(YUTILS_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()

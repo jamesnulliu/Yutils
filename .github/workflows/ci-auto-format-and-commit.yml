@@ -4,30 +4,44 @@ on:
   push:
     branches:
       - main
-  
+
+permissions:
+  contents: write
+
 jobs:
-  clang-format:
+  format:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Switch to main
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
           token: ${{ secrets.PAT || github.token }}
 
-      - name: Install clang-format
-        run: sudo apt-get install clang-format
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - name: Run clang-format
-        run: | 
-          clang-format -i $(find .  \
-                            -name '*.c' -o -name '*.h'  \
-                            -o -name '*.cpp' -o -name '*.hpp'  \
-                            -o -name '*.cu' -o -name '*.cuh')
+      - name: Install formatter
+        shell: bash
+        run: |
+          wget https://apt.llvm.org/llvm.sh 
+          sudo chmod +x ./llvm.sh && sudo ./llvm.sh 21 && rm ./llvm.sh
+          sudo apt-get update
+          sudo apt-get install clang-format-21
+          sudo ln -sf $(which clang-format-21) /usr/bin/clang-format
+          python -m pip install ruff
+
+      - name: Run format script
+        shell: bash
+        run: |
+          bash ./scripts/format.sh -cxx -py
       
       - name: Check for Uncommitted Changes
+        shell: bash
         id: format_check
         run: |
           # Check if clang-format introduced any changes
@@ -40,9 +54,10 @@ jobs:
           fi
 
       - name: Commit and Push to main
+        shell: bash
         if : ${{ steps.format_check.outputs.format_status == 'fail' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -am "[skip ci] Auto-format code with clang-format"
+          git commit -am "[skip ci] Auto-format code with clang-format and black"
           git push origin main
